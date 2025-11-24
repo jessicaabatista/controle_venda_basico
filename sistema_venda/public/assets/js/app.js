@@ -1,4 +1,4 @@
-// Funções auxiliares globais
+// FunÃ§Ãµes auxiliares globais
 
 function formatarMoeda(valor) {
     return new Intl.NumberFormat('pt-BR', {
@@ -19,7 +19,7 @@ function formatarDataCompleta(data) {
     return date.toLocaleDateString('pt-BR') + ' ' + date.toLocaleTimeString('pt-BR');
 }
 
-// Máscaras de entrada
+// MÃ¡scaras de entrada
 function aplicarMascaraTelefone(input) {
     input.addEventListener('input', function() {
         let valor = this.value.replace(/\D/g, '');
@@ -70,20 +70,20 @@ function aplicarMascaraCpfCnpj(input) {
     });
 }
 
-// Validação de email
+// ValidaÃ§Ã£o de email
 function validarEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 }
 
-// Confirmação com SweetAlert (opcional)
+// ConfirmaÃ§Ã£o com SweetAlert (opcional)
 function confirmar(mensagem, callback) {
     if (confirm(mensagem)) {
         callback();
     }
 }
 
-// Toast de notificação
+// Toast de notificaÃ§Ã£o
 function mostrarNotificacao(mensagem, tipo = 'info') {
     const toast = document.createElement('div');
     toast.style.cssText = `
@@ -115,9 +115,9 @@ function mostrarNotificacao(mensagem, tipo = 'info') {
     }, 3000);
 }
 
-// Inicializar aplicação
+// Inicializar aplicaÃ§Ã£o
 document.addEventListener('DOMContentLoaded', function() {
-    // Aplicar máscaras em elementos com classes específicas
+    // Aplicar mÃ¡scaras em elementos com classes especÃ­ficas
     document.querySelectorAll('.input-telefone').forEach(input => {
         aplicarMascaraTelefone(input);
     });

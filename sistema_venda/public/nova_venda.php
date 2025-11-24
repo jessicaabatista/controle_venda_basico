@@ -224,8 +224,8 @@ if ($idVenda) {
                 </div>
 
                 <div class="form-group">
-                    <label>ObservaÁıes</label>
-                    <textarea name="observacoes" rows="5" placeholder="ObservaÁıes sobre o pagamento..."></textarea>
+                    <label>Observa√ß√µes</label>
+                    <textarea name="observacoes" rows="5" placeholder="Observa√ß√µes sobre o pagamento..."></textarea>
                 </div>
 
                 <button type="submit" name="criar_venda" class="btn btn-primary" style="width: 100%; margin-top: 20px;">Criar Venda</button>
@@ -279,7 +279,7 @@ if ($idVenda) {
                 </div>
 
                 <div class="form-group">
-                    <label>Data CriaÁ„o</label>
+                    <label>Data Cria√ß√£o</label>
                     <p style="color: #666;"><?php echo date('d/m/Y H:i', strtotime($venda['data_venda'])); ?></p>
                 </div>
 
@@ -341,13 +341,13 @@ if ($idVenda) {
                 <table class="tabela-itens">
                     <thead>
                         <tr>
-                            <th>DescriÁ„o</th>
+                            <th>Descri√ß√£o</th>
                             <th>Quantidade</th>
-                            <th>Valor Unit·rio</th>
+                            <th>Valor Unit√°rio</th>
                             <th>Total</th>
                             <th>Saldo</th>
                             <th>Status</th>
-                            <th>AÁ„o</th>
+                            <th>A√ß√£o</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -380,10 +380,10 @@ if ($idVenda) {
             <?php endif; ?>
         </div>
 
-        <!-- OpÁıes de Parcelamento -->
+        <!-- Op√ß√µes de Parcelamento -->
         <?php if (!empty($itens) && $venda['valor_total'] > 0): ?>
         <div class="card">
-            <h2>OpÁıes de Parcelamento</h2>
+            <h2>Op√ß√µes de Parcelamento</h2>
             <div class="form-group">
                 <label>Quantidade de Parcelas</label>
                 <select id="quantidadeParcelas" onchange="atualizarResumoParcelas()">
@@ -425,13 +425,13 @@ if ($idVenda) {
                 <input type="hidden" id="idVendaItem" value="<?php echo $idVenda; ?>">
 
                 <div class="form-group">
-                    <label>CÛdigo do Produto *</label>
+                    <label>C√≥digo do Produto *</label>
                     <input type="text" id="codigoProdutoItem" placeholder="Ex: PROD001" required>
                     <small class="form-error" id="erroCodigo"></small>
                 </div>
 
                 <div class="form-group">
-                    <label>DescriÁ„o do Item *</label>
+                    <label>Descri√ß√£o do Item *</label>
                     <input type="text" id="descricaoItem" placeholder="Ex: Colar de Ouro" required>
                     <small class="form-error" id="erroDescricao"></small>
                 </div>
@@ -443,7 +443,7 @@ if ($idVenda) {
                 </div>
 
                 <div class="form-group">
-                    <label>Valor Unit·rio *</label>
+                    <label>Valor Unit√°rio *</label>
                     <input type="number" id="valorUnitarioItem" min="0.01" step="0.01" required>
                     <small class="form-error" id="erroValor"></small>
                 </div>
@@ -463,7 +463,7 @@ if ($idVenda) {
     <script src="assets/js/validacoes.js"></script>
     <script src="assets/js/app.js"></script>
     <script>
-        // ValidaÁıes do formul·rio
+        // Valida√ß√µes do formul√°rio
         function validarFormularioVenda() {
             let valido = true;
             
@@ -486,17 +486,17 @@ if ($idVenda) {
             // Limpar erros anteriores
             document.querySelectorAll('.form-error').forEach(el => el.textContent = '');
             
-            // Validar cÛdigo
+            // Validar c√≥digo
             const codigo = document.getElementById('codigoProdutoItem').value.trim();
             if (!codigo) {
-                document.getElementById('erroCodigo').textContent = 'CÛdigo È obrigatÛrio';
+                document.getElementById('erroCodigo').textContent = 'C√≥digo √© obrigat√≥rio';
                 valido = false;
             }
             
-            // Validar descriÁ„o
+            // Validar descri√ß√£o
             const descricao = document.getElementById('descricaoItem').value.trim();
             if (!descricao) {
-                document.getElementById('erroDescricao').textContent = 'DescriÁ„o È obrigatÛria';
+                document.getElementById('erroDescricao').textContent = 'Descri√ß√£o √© obrigat√≥ria';
                 valido = false;
             }
             
@@ -533,7 +533,7 @@ if ($idVenda) {
             // Validar email se preenchido
             const email = document.getElementById('novoClienteEmail').value.trim();
             if (email && !Validador.isValidEmail(email)) {
-                document.getElementById('erroEmailCliente').textContent = 'Email inv·lido';
+                document.getElementById('erroEmailCliente').textContent = 'Email inv√°lido';
                 valido = false;
             }
             
@@ -604,7 +604,7 @@ if ($idVenda) {
                     document.getElementById('searchCliente').value = nome;
                     document.getElementById('erroCliente').textContent = '';
                     
-                    // Limpar formul·rio de novo cliente
+                    // Limpar formul√°rio de novo cliente
                     document.getElementById('novoClienteNome').value = '';
                     document.getElementById('novoClienteEmail').value = '';
                     document.getElementById('novoClienteTelefone').value = '';
@@ -757,7 +757,7 @@ if ($idVenda) {
             }
         });
 
-        // Fechar sugestıes ao clicar fora
+        // Fechar sugest√µes ao clicar fora
         document.addEventListener('click', function(event) {
             const searchCliente = document.getElementById('searchCliente');
             const sugestoes = document.getElementById('clienteSugestoes');

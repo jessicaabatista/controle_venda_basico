@@ -276,10 +276,10 @@ if (!$venda) {
             <table>
                 <thead>
                     <tr>
-                        <th>Código</th>
-                        <th>Descrição</th>
+                        <th>CÃ³digo</th>
+                        <th>DescriÃ§Ã£o</th>
                         <th>Quantidade</th>
-                        <th>Valor Unitário</th>
+                        <th>Valor UnitÃ¡rio</th>
                         <th>Total</th>
                         <th>Status</th>
                         <th>Saldo</th>
@@ -347,7 +347,7 @@ if (!$venda) {
                             <th>Saldo</th>
                             <th>Vencimento</th>
                             <th>Status</th>
-                            <th>Ação</th>
+                            <th>AÃ§Ã£o</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -383,10 +383,10 @@ if (!$venda) {
             <?php endif; ?>
         </div>
 
-        <!-- Observaçõesções -->
+        <!-- ObservaÃ§Ãµes -->
         <?php if ($venda['observacoes_pagamento']): ?>
         <div class="card">
-            <h3>Observaçõesções de Pagamento</h3>
+            <h3>ObservaÃ§Ãµes de Pagamento</h3>
             <p><?php echo nl2br(htmlspecialchars($venda['observacoes_pagamento'])); ?></p>
         </div>
         <?php endif; ?>

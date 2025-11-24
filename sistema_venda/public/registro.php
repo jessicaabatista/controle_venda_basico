@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $resultado = $usuario->criar($_POST['nome'], $_POST['email'], $_POST['senha']);
 
     if ($resultado['sucesso']) {
-        $sucesso = 'Usu·rio criado com sucesso! FaÁa login para continuar.';
+        $sucesso = 'Usu√°rio criado com sucesso! Fa√ßa login para continuar.';
     } else {
         $erro = $resultado['mensagem'];
     }
@@ -163,7 +163,7 @@ if (isset($_SESSION['id_usuario'])) {
             </form>
 
             <div class="registro-link">
-                J· tem conta? <a href="login.php">FaÁa login aqui</a>
+                J√° tem conta? <a href="login.php">Fa√ßa login aqui</a>
             </div>
         </div>
     </div>

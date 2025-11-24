@@ -4,7 +4,7 @@ class Database {
     private $host = 'localhost';
     private $user = 'root';
     private $password = '';
-    private $database = 'vendas_semijoias';
+    private $database = 'sistema_vendas';
 
     public function connect() {
         $this->connection = new mysqli(
@@ -15,7 +15,7 @@ class Database {
         );
 
         if ($this->connection->connect_error) {
-            die('Erro de conexão: ' . $this->connection->connect_error);
+            die('Erro de conexÃ£o: ' . $this->connection->connect_error);
         }
 
         $this->connection->set_charset('utf8mb4');

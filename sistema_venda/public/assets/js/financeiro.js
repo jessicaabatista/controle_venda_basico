@@ -3,7 +3,7 @@ let idVendaAtual, parcelasVenda, itensVenda;
 function abrirModalPagamento(idVenda) {
     idVendaAtual = idVenda;
     
-    // Limpar formul·rio e erros anteriores
+    // Limpar formul√°rio e erros anteriores
     limparFormularioPagamento();
     
     // Buscar dados da venda
@@ -44,7 +44,7 @@ function abrirModalPagamento(idVenda) {
                 selectItem.appendChild(option);
             });
 
-            // Atualizar valor padr„o (venda total)
+            // Atualizar valor padr√£o (venda total)
             const inputValor = document.getElementById('valorPago');
             const saldoTotal = dados.venda.saldo_devedor || 0;
             inputValor.value = saldoTotal.toFixed(2);
@@ -178,7 +178,7 @@ function validarFormularioPagamento() {
         valido = false;
     }
     
-    // Validar tipo especÌfico
+    // Validar tipo espec√≠fico
     if (tipo === 'parcela') {
         const idParcela = document.getElementById('idParcela').value;
         if (!idParcela) {
@@ -205,7 +205,7 @@ function validarFormularioPagamento() {
 
 // Adicionar campos de erro ao modal
 document.addEventListener('DOMContentLoaded', function() {
-    // Adicionar spans de erro se n„o existirem
+    // Adicionar spans de erro se n√£o existirem
     const formPagamento = document.getElementById('formPagamento');
     if (formPagamento && !document.getElementById('erroValor')) {
         const valorPago = document.getElementById('valorPago');
@@ -274,10 +274,10 @@ document.getElementById('formPagamento').addEventListener('submit', function(e) 
     })
     .catch(error => {
         console.error('Erro:', error);
-        FeedbackVisual.mostrarNotificacao('erro', 'Erro ao processar pagamento. Verifique sua conex„o e tente novamente.');
+        FeedbackVisual.mostrarNotificacao('erro', 'Erro ao processar pagamento. Verifique sua conex√£o e tente novamente.');
     })
     .finally(() => {
-        // Restaurar bot„o
+        // Restaurar bot√£o
         FeedbackVisual.restaurarElemento(submitBtn);
     });
 });
@@ -300,14 +300,14 @@ document.getElementById('valorPago').addEventListener('input', function() {
     atualizarSaldoApos();
 });
 
-// Validar valor m·ximo
+// Validar valor m√°ximo
 document.getElementById('valorPago').addEventListener('change', function() {
     const valor = parseFloat(this.value);
     const maximo = parseFloat(this.max);
     
     if (valor > maximo) {
         this.value = maximo.toFixed(2);
-        document.getElementById('erroValor').textContent = `Valor m·ximo È R$ ${maximo.toFixed(2)}`;
+        document.getElementById('erroValor').textContent = `Valor m√°ximo √© R$ ${maximo.toFixed(2)}`;
     }
 });
 

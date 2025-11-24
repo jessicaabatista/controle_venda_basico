@@ -7,32 +7,32 @@ class Financeiro {
     }
 
     public function gerarParcelas($idVenda, $quantidadeParcelas) {
-        // ValidaÁıes
+        // Valida√ß√µes
         if (!$idVenda || !is_numeric($idVenda) || $idVenda <= 0) {
-            throw new Exception('ID da venda inv·lido');
+            throw new Exception('ID da venda inv√°lido');
         }
         
         if (!$quantidadeParcelas || !is_numeric($quantidadeParcelas) || $quantidadeParcelas <= 0) {
-            throw new Exception('Quantidade de parcelas inv·lida');
+            throw new Exception('Quantidade de parcelas inv√°lida');
         }
         
         if ($quantidadeParcelas > 24) {
-            throw new Exception('M·ximo de 24 parcelas permitido');
+            throw new Exception('M√°ximo de 24 parcelas permitido');
         }
         
         $venda = $this->obterVenda($idVenda);
         if (!$venda) {
-            throw new Exception('Venda n„o encontrada');
+            throw new Exception('Venda n√£o encontrada');
         }
         
         if ($venda['valor_total'] <= 0) {
             throw new Exception('Valor total da venda deve ser maior que zero');
         }
         
-        // Verificar se j· existem parcelas
+        // Verificar se j√° existem parcelas
         $parcelasExistentes = $this->obterParcelas($idVenda);
         if (!empty($parcelasExistentes)) {
-            throw new Exception('Esta venda j· possui parcelas geradas');
+            throw new Exception('Esta venda j√° possui parcelas geradas');
         }
         
         $valorTotal = $venda['valor_total'];
@@ -44,22 +44,22 @@ class Financeiro {
         for ($i = 1; $i <= $quantidadeParcelas; $i++) {
             $valor = $valorBase;
 
-            // Adiciona a diferenÁa na ˙ltima parcela
+            // Adiciona a diferen√ßa na √∫ltima parcela
             if ($i == $quantidadeParcelas) {
                 $valor += $diferenca;
             }
 
             $dataVencimento = date('Y-m-d', strtotime("+$i months"));
             
-            // Validar data de vencimento (n„o pode ser no passado)
+            // Validar data de vencimento (n√£o pode ser no passado)
             if (strtotime($dataVencimento) < strtotime('today')) {
-                throw new Exception('Data de vencimento n„o pode ser no passado');
+                throw new Exception('Data de vencimento n√£o pode ser no passado');
             }
                         
-            // Validar data de vencimento (n„o pode ser mais de 5 anos no futuro)
+            // Validar data de vencimento (n√£o pode ser mais de 5 anos no futuro)
             $dataMaxima = date('Y-m-d', strtotime('+5 years'));
             if (strtotime($dataVencimento) > strtotime($dataMaxima)) {
-                throw new Exception('Data de vencimento n„o pode ser superior a 5 anos');
+                throw new Exception('Data de vencimento n√£o pode ser superior a 5 anos');
             }
 
             $query = "INSERT INTO financeiro_parcelas 
@@ -80,9 +80,9 @@ class Financeiro {
     }
 
     public function registrarPagamento($idVenda, $valorPago, $formaPagamento = 'dinheiro', $observacoes = '', $idParcela = null, $idItem = null) {
-        // ValidaÁıes b·sicas
+        // Valida√ß√µes b√°sicas
         if (!$idVenda || !is_numeric($idVenda)) {
-            throw new Exception('ID da venda inv·lido');
+            throw new Exception('ID da venda inv√°lido');
         }
         
         if (!$valorPago || $valorPago <= 0) {
@@ -90,13 +90,13 @@ class Financeiro {
         }
         
         if (!in_array($formaPagamento, ['dinheiro', 'cartao_credito', 'cartao_debito', 'pix', 'transferencia', 'boleto'])) {
-            throw new Exception('Forma de pagamento inv·lida');
+            throw new Exception('Forma de pagamento inv√°lida');
         }
         
         // Verificar se a venda existe
         $venda = $this->obterVenda($idVenda);
         if (!$venda) {
-            throw new Exception('Venda n„o encontrada');
+            throw new Exception('Venda n√£o encontrada');
         }
         
         // Validar parcela se especificada
@@ -106,15 +106,15 @@ class Financeiro {
             $parcela = $stmt->get_result()->fetch_assoc();
             
             if (!$parcela) {
-                throw new Exception('Parcela n„o encontrada');
+                throw new Exception('Parcela n√£o encontrada');
             }
             
             if ($parcela['status'] === 'paga') {
-                throw new Exception('Esta parcela j· est· paga');
+                throw new Exception('Esta parcela j√° est√° paga');
             }
             
             if ($valorPago > $parcela['saldo_parcela']) {
-                throw new Exception('Valor do pagamento n„o pode ser maior que o saldo da parcela');
+                throw new Exception('Valor do pagamento n√£o pode ser maior que o saldo da parcela');
             }
         }
         
@@ -125,28 +125,28 @@ class Financeiro {
             $item = $stmt->get_result()->fetch_assoc();
             
             if (!$item) {
-                throw new Exception('Item n„o encontrado');
+                throw new Exception('Item n√£o encontrado');
             }
             
             if ($item['status_pagamento'] === 'pago') {
-                throw new Exception('Este item j· est· pago');
+                throw new Exception('Este item j√° est√° pago');
             }
             
             if ($valorPago > $item['saldo_item']) {
-                throw new Exception('Valor do pagamento n„o pode ser maior que o saldo do item');
+                throw new Exception('Valor do pagamento n√£o pode ser maior que o saldo do item');
             }
         }
         
         // Validar saldo total da venda
         if (!$idParcela && !$idItem && $valorPago > $venda['saldo_devedor']) {
-            throw new Exception('Valor do pagamento n„o pode ser maior que o saldo devedor da venda');
+            throw new Exception('Valor do pagamento n√£o pode ser maior que o saldo devedor da venda');
         }
 
         $connection = $this->db->getConnection();
         $connection->begin_transaction();
 
         try {
-            // Registrar movimentaÁ„o
+            // Registrar movimenta√ß√£o
             $query = "INSERT INTO financeiro_movimentacoes 
                      (id_venda, id_parcela, id_item, valor_pago, forma_pagamento, observacoes)
                      VALUES (?, ?, ?, ?, ?, ?)";
@@ -187,7 +187,7 @@ class Financeiro {
                 $this->recalcularParcelasRestantes($idVenda, $idParcela);
             }
 
-            // Atualizar item (se aplic·vel)
+            // Atualizar item (se aplic√°vel)
             if ($idItem) {
                 $query = "UPDATE itens_venda 
                          SET valor_pago = COALESCE(valor_pago, 0) + ?,
@@ -224,7 +224,7 @@ class Financeiro {
     }
 
     private function recalcularParcelasRestantes($idVenda, $idParcelaPaga) {
-        // Obter informaÁıes da parcela paga
+        // Obter informa√ß√µes da parcela paga
         $query = "SELECT numero_parcela, valor_previsto, valor_efetivo FROM financeiro_parcelas WHERE id_parcela = ?";
         $stmt = $this->db->execute($query, 'i', [$idParcelaPaga]);
         $parcelaPaga = $stmt->get_result()->fetch_assoc();
@@ -235,12 +235,12 @@ class Financeiro {
 
         $diferenca = $parcelaPaga['valor_previsto'] - $parcelaPaga['valor_efetivo'];
         
-        // Se n„o houve diferenÁa, n„o precisa recalcular
+        // Se n√£o houve diferen√ßa, n√£o precisa recalcular
         if (abs($diferenca) < 0.01) {
             return;
         }
 
-        // Obter parcelas restantes (abertas) com n˙mero maior que a parcela paga
+        // Obter parcelas restantes (abertas) com n√∫mero maior que a parcela paga
         $query = "SELECT id_parcela, numero_parcela, valor_previsto, saldo_parcela 
                  FROM financeiro_parcelas 
                  WHERE id_venda = ? AND status = 'aberta' AND numero_parcela > ? 
@@ -252,7 +252,7 @@ class Financeiro {
             return;
         }
 
-        // Distribuir a diferenÁa nas parcelas restantes
+        // Distribuir a diferen√ßa nas parcelas restantes
         $quantidadeParcelas = count($parcelasRestantes);
         $ajustePorParcela = $diferenca / $quantidadeParcelas;
         $ajusteAcumulado = 0;
@@ -260,7 +260,7 @@ class Financeiro {
         foreach ($parcelasRestantes as $index => $parcela) {
             $novoValor = $parcela['valor_previsto'] + $ajustePorParcela;
             
-            // Na ˙ltima parcela, ajustar para compensar arredondamentos
+            // Na √∫ltima parcela, ajustar para compensar arredondamentos
             if ($index === $quantidadeParcelas - 1) {
                 $novoValor = $parcela['valor_previsto'] + ($diferenca - $ajusteAcumulado);
             } else {
@@ -321,7 +321,7 @@ class Financeiro {
     }
 
     public function obterDashboard() {
-        // Vendas do mÍs
+        // Vendas do m√™s
         $query = "SELECT COUNT(*) as total_vendas, SUM(valor_total) as valor_total
                  FROM vendas
                  WHERE MONTH(data_venda) = MONTH(NOW()) AND YEAR(data_venda) = YEAR(NOW())";
@@ -333,7 +333,7 @@ class Financeiro {
                  WHERE data_vencimento < CURDATE() AND status = 'aberta'";
         $vencidas = $this->db->select($query)[0];
 
-        // PrÛximas cobranÁas
+        // Pr√≥ximas cobran√ßas
         $query = "SELECT fp.*, v.id_cliente, c.nome
                  FROM financeiro_parcelas fp
                  JOIN vendas v ON fp.id_venda = v.id_venda
@@ -350,7 +350,7 @@ class Financeiro {
     }
     
     private function registrarLog($acao, $idVenda, $detalhes) {
-        // Criar tabela de logs se n„o existir
+        // Criar tabela de logs se n√£o existir
         $query = "CREATE TABLE IF NOT EXISTS logs_auditoria (
             id_log INT PRIMARY KEY AUTO_INCREMENT,
             acao VARCHAR(50) NOT NULL,

@@ -11,7 +11,7 @@ if (!$idCliente) {
     http_response_code(400);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'ID do cliente inv·lido'
+        'mensagem' => 'ID do cliente inv√°lido'
     ]);
     exit;
 }

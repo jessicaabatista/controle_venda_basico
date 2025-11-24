@@ -12,7 +12,7 @@ $config = new Configuracao();
 $email = new Email();
 $cliente_obj = new Cliente();
 
-// Buscar parcelas que vencem nos próximos 5 dias
+// Buscar parcelas que vencem nos prÃ³ximos 5 dias
 $query = "SELECT p.*, v.id_cliente, c.nome, c.email
          FROM parcelas p
          JOIN vendas v ON p.id_venda = v.id_venda

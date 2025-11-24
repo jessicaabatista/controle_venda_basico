@@ -129,7 +129,7 @@ $vendas = $venda_obj->listar($filtros);
 
     <div class="container">
         <div class="list-header">
-            <h1>Gestão de Vendas</h1>
+            <h1>GestÃ£o de Vendas</h1>
             <a href="nova_venda.php" class="btn btn-primary">+ Nova Venda</a>
         </div>
 
@@ -154,7 +154,7 @@ $vendas = $venda_obj->listar($filtros);
                     </div>
 
                     <div class="form-group">
-                        <label>Data Início</label>
+                        <label>Data InÃ­cio</label>
                         <input type="date" name="data_inicio" value="<?php echo htmlspecialchars($filtros['data_inicio']); ?>">
                     </div>
 
@@ -174,7 +174,7 @@ $vendas = $venda_obj->listar($filtros);
         <!-- Tabela de Vendas -->
         <?php if (empty($vendas)): ?>
             <div class="sem-resultados">
-                <p>?? Nenhuma venda encontrada</p>
+                <p>Nenhuma venda encontrada</p>
                 <a href="nova_venda.php" class="btn btn-primary">Criar primeira venda</a>
             </div>
         <?php else: ?>
@@ -190,7 +190,7 @@ $vendas = $venda_obj->listar($filtros);
                             <th>Valor Pago</th>
                             <th>Saldo</th>
                             <th>Status</th>
-                            <th>Ações</th>
+                            <th>AÃ§Ãµes</th>
                         </tr>
                     </thead>
                     <tbody>

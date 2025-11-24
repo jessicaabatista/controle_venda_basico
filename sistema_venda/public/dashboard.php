@@ -294,7 +294,7 @@ $dashboardData = $financeiro->obterDashboard();
                 <a href="vendas.php" class="nav-link">Vendas</a>
                 <a href="nova_venda.php" class="nav-link">+ Nova Venda</a>
                 <a href="clientes.php" class="nav-link">Clientes</a>
-                <a href="relatorios.php" class="nav-link">Relatórios</a>
+                <a href="relatorios.php" class="nav-link">RelatÃ³rios</a>
                 <div class="nav-user">
                     <span><?php echo htmlspecialchars($usuarioAtual['nome']); ?></span>
                     <a href="logout.php" class="nav-logout">Sair</a>
@@ -322,7 +322,7 @@ $dashboardData = $financeiro->obterDashboard();
                 <div class="kpi-card">
                     <div class="kpi-icon"><i class="fas fa-shopping-cart"></i></div>
                     <div class="kpi-content">
-                        <h3>Total de Vendas (Mês)</h3>
+                        <h3>Total de Vendas (MÃªs)</h3>
                         <p class="kpi-value" id="totalVendas">R$ 0,00</p>
                         <p class="kpi-label" id="qtdVendas">0 vendas</p>
                     </div>
@@ -340,7 +340,7 @@ $dashboardData = $financeiro->obterDashboard();
                 <div class="kpi-card">
                     <div class="kpi-icon"><i class="fas fa-calendar-check"></i></div>
                     <div class="kpi-content">
-                        <h3>Próximas Cobranças (30 dias)</h3>
+                        <h3>PrÃ³ximas CobranÃ§as (30 dias)</h3>
                         <p class="kpi-value" id="proximasCobr">R$ 0,00</p>
                         <p class="kpi-label" id="qtdProximas">0 parcelas</p>
                     </div>
@@ -356,11 +356,11 @@ $dashboardData = $financeiro->obterDashboard();
                 </div>
             </div>
 
-            <!-- Métricas Adicionais -->
+            <!-- MÃ©tricas Adicionais -->
             <div class="metricas-adicionais">
                 <div class="metrica-small">
                     <div class="valor" id="ticketMedio">R$ 0,00</div>
-                    <div class="label">Ticket Médio</div>
+                    <div class="label">Ticket MÃ©dio</div>
                 </div>
                 <div class="metrica-small">
                     <div class="valor" id="taxaConversao">0%</div>
@@ -379,7 +379,7 @@ $dashboardData = $financeiro->obterDashboard();
             <!-- Charts Row 1 -->
             <div class="charts-container">
                 <div class="chart-card">
-                    <h3><i class="fas fa-chart-bar"></i> Vendas por Dia (Mês Atual)</h3>
+                    <h3><i class="fas fa-chart-bar"></i> Vendas por Dia (MÃªs Atual)</h3>
                     <div class="chart-container">
                         <canvas id="vendasPorDiaChart"></canvas>
                     </div>
@@ -413,7 +413,7 @@ $dashboardData = $financeiro->obterDashboard();
             <!-- Charts Row 3 -->
             <div class="charts-container">
                 <div class="chart-card">
-                    <h3><i class="fas fa-chart-line"></i> Evolução Mensal</h3>
+                    <h3><i class="fas fa-chart-line"></i> EvoluÃ§Ã£o Mensal</h3>
                     <div class="chart-container">
                         <canvas id="evolucaoMensalChart"></canvas>
                     </div>
@@ -427,12 +427,12 @@ $dashboardData = $financeiro->obterDashboard();
                 </div>
             </div>
 
-            <!-- Próximas Cobranças -->
+            <!-- PrÃ³ximas CobranÃ§as -->
             <div class="chart-card">
-                <h3><i class="fas fa-bell"></i> Próximas Cobranças (30 dias)</h3>
+                <h3><i class="fas fa-bell"></i> PrÃ³ximas CobranÃ§as (30 dias)</h3>
                 <div id="proximasCobrancasLista" class="cobrancas-lista">
                     <div class="loading">
-                        <p>Carregando cobranças...</p>
+                        <p>Carregando cobranÃ§as...</p>
                     </div>
                 </div>
             </div>

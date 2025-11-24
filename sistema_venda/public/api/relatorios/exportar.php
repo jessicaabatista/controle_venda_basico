@@ -12,7 +12,7 @@ $dataInicio = $_GET['data_inicio'] ?? date('Y-m-01');
 $dataFim = $_GET['data_fim'] ?? date('Y-m-d');
 
 try {
-    // Obter dados do relatório
+    // Obter dados do relatÃ³rio
     $dados = [];
     $nomeArquivo = '';
     
@@ -28,7 +28,7 @@ try {
     }
 
     if (empty($dados)) {
-        throw new Exception('Nenhum dado encontrado para o relatório solicitado');
+        throw new Exception('Nenhum dado encontrado para o relatÃ³rio solicitado');
     }
 
     if ($formato === 'csv') {
@@ -36,7 +36,7 @@ try {
     } elseif ($formato === 'pdf') {
         exportarPDF($dados, $tipo, $nomeArquivo, $dataInicio, $dataFim);
     } else {
-        throw new Exception('Formato de exportação inválido');
+        throw new Exception('Formato de exportaÃ§Ã£o invÃ¡lido');
     }
 
 } catch (Exception $e) {
@@ -53,15 +53,15 @@ function exportarCSV($dados, $tipo, $nomeArquivo) {
     header('Cache-Control: no-cache, must-revalidate');
     header('Expires: 0');
 
-    // Criar arquivo CSV em memória
+    // Criar arquivo CSV em memÃ³ria
     $output = fopen('php://output', 'w');
 
     // Adicionar BOM para UTF-8
     fwrite($output, "\xEF\xBB\xBF");
 
-    // Cabeçalho CSV baseado no tipo
+    // CabeÃ§alho CSV baseado no tipo
     if ($tipo === 'fluxo_caixa') {
-        fputcsv($output, ['Data', 'Movimentações', 'Valor Total']);
+        fputcsv($output, ['Data', 'MovimentaÃ§Ãµes', 'Valor Total']);
         foreach ($dados as $linha) {
             fputcsv($output, [
                 date('d/m/Y', strtotime($linha['data'])),
@@ -104,10 +104,10 @@ function exportarPDF($dados, $tipo, $nomeArquivo, $dataInicio, $dataFim) {
     header('Cache-Control: no-cache, must-revalidate');
     header('Expires: 0');
 
-    // Criar conteúdo HTML para o PDF
+    // Criar conteÃºdo HTML para o PDF
     $html = gerarHTMLPDF($dados, $tipo, $dataInicio, $dataFim);
 
-    // Usar uma biblioteca simples para gerar PDF (usando DOMPDF se disponível, ou fallback para HTML)
+    // Usar uma biblioteca simples para gerar PDF (usando DOMPDF se disponÃ­vel, ou fallback para HTML)
     if (class_exists('Dompdf')) {
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
@@ -134,8 +134,8 @@ function gerarHTMLPDF($dados, $tipo, $dataInicio, $dataFim) {
         $titulo = 'Desempenho de Vendas';
         $periodo = date('d/m/Y', strtotime($dataInicio)) . ' a ' . date('d/m/Y', strtotime($dataFim));
     } elseif ($tipo === 'pendencias') {
-        $titulo = 'Pendências de Recebimento';
-        $periodo = 'Data de geração: ' . date('d/m/Y H:i');
+        $titulo = 'PendÃªncias de Recebimento';
+        $periodo = 'Data de geraÃ§Ã£o: ' . date('d/m/Y H:i');
     }
 
     $html = '<!DOCTYPE html>
@@ -164,7 +164,7 @@ function gerarHTMLPDF($dados, $tipo, $dataInicio, $dataFim) {
         $html .= '<table>
             <tr>
                 <th>Data</th>
-                <th>Movimentações</th>
+                <th>MovimentaÃ§Ãµes</th>
                 <th>Valor Total</th>
             </tr>';
         
@@ -257,7 +257,7 @@ function gerarHTMLPDF($dados, $tipo, $dataInicio, $dataFim) {
 
     $html .= '</table>
     <div class="footer">
-        <p>Relatório gerado em ' . date('d/m/Y H:i:s') . ' pelo Sistema de Semi-Joias</p>
+        <p>RelatÃ³rio gerado em ' . date('d/m/Y H:i:s') . ' pelo Sistema de Semi-Joias</p>
     </div>
 </body>
 </html>';

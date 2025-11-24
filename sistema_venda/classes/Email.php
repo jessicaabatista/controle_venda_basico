@@ -24,7 +24,7 @@ class Email {
             return false;
         }
 
-        $assunto = 'ConfirmaÁ„o de Pagamento - Semi-Joias';
+        $assunto = 'Confirma√ß√£o de Pagamento - Semi-Joias';
 
         $corpo = <<<HTML
         <html>
@@ -41,13 +41,13 @@ class Email {
             <div class="container">
                 <div class="header">
                     <h1>Semi-Joias</h1>
-                    <p>ConfirmaÁ„o de Pagamento Recebido</p>
+                    <p>Confirma√ß√£o de Pagamento Recebido</p>
                 </div>
 
                 <div class="content">
-                    <p>Ol· <strong>{$cliente['nome']}</strong>,</p>
+                    <p>Ol√° <strong>{$cliente['nome']}</strong>,</p>
 
-                    <p>Confirmamos o recebimento do seu pagamento referente ‡ venda #<strong>{$venda['id_venda']}</strong>.</p>
+                    <p>Confirmamos o recebimento do seu pagamento referente √† venda #<strong>{$venda['id_venda']}</strong>.</p>
 
                     <h3>Detalhes da Venda:</h3>
                     <ul>
@@ -57,11 +57,11 @@ class Email {
                         <li><strong>Saldo Devedor:</strong> R$ {$this->formatarMoeda($venda['saldo_devedor'])}</li>
                     </ul>
 
-                    <p>Obrigado por sua confianÁa!</p>
+                    <p>Obrigado por sua confian√ßa!</p>
                 </div>
 
                 <div class="footer">
-                    <p>Este È um email autom·tico. N„o responda a este email.</p>
+                    <p>Este √© um email autom√°tico. N√£o responda a este email.</p>
                 </div>
             </div>
         </body>
@@ -94,10 +94,10 @@ class Email {
                 </div>
 
                 <div class="content">
-                    <p>Ol· <strong>{$nomeCliente}</strong>,</p>
+                    <p>Ol√° <strong>{$nomeCliente}</strong>,</p>
 
                     <div class="alerta">
-                        <strong>? AtenÁ„o!</strong> VocÍ tem uma parcela a vencer.
+                        <strong>? Aten√ß√£o!</strong> Voc√™ tem uma parcela a vencer.
                     </div>
 
                     <h3>Detalhes da Parcela:</h3>
@@ -106,13 +106,13 @@ class Email {
                         <li><strong>Valor:</strong> R$ {$this->formatarMoeda($saldo)}</li>
                     </ul>
 
-                    <p>Por favor, realize o pagamento atÈ a data de vencimento para evitar cobranÁas de multa e juros.</p>
+                    <p>Por favor, realize o pagamento at√© a data de vencimento para evitar cobran√ßas de multa e juros.</p>
 
-                    <p>D˙vidas? Entre em contato conosco!</p>
+                    <p>D√∫vidas? Entre em contato conosco!</p>
                 </div>
 
                 <div class="footer">
-                    <p>Este È um email autom·tico. N„o responda a este email.</p>
+                    <p>Este √© um email autom√°tico. N√£o responda a este email.</p>
                 </div>
             </div>
         </body>
@@ -127,17 +127,17 @@ class Email {
         $headers .= "Content-type: text/html; charset=UTF-8\r\n";
         $headers .= "From: " . $this->config['email_de'] . "\r\n";
 
-        // Se tiver configuraÁ„o de SMTP, usar PHPMailer
+        // Se tiver configura√ß√£o de SMTP, usar PHPMailer
         if ($this->config['email_host']) {
             return $this->enviarSMTP($para, $assunto, $corpo);
         }
 
-        // Caso contr·rio, usar mail nativo do PHP
+        // Caso contr√°rio, usar mail nativo do PHP
         return mail($para, $assunto, $corpo, $headers);
     }
 
     private function enviarSMTP($para, $assunto, $corpo) {
-        // Necess·rio instalar via Composer: composer require phpmailer/phpmailer
+        // Necess√°rio instalar via Composer: composer require phpmailer/phpmailer
         // require_once __DIR__ . '/../vendor/autoload.php';
 
         // use PHPMailer\PHPMailer\PHPMailer;

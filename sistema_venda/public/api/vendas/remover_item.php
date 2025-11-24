@@ -11,7 +11,7 @@ if (!$idItem) {
     http_response_code(400);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'ID do item inv·lido'
+        'mensagem' => 'ID do item inv√°lido'
     ]);
     exit;
 }

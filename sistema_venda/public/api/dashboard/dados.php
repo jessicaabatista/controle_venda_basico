@@ -7,7 +7,7 @@ require_once '../../classes/Financeiro.php';
 $financeiro = new Financeiro();
 $dados = $financeiro->obterDashboard();
 
-// Dados para gr·fico de vendas do mÍs
+// Dados para gr√°fico de vendas do m√™s
 $query = "SELECT DATE_FORMAT(data_venda, '%d') as dia, COUNT(*) as total, SUM(valor_total) as valor
          FROM vendas
          WHERE MONTH(data_venda) = MONTH(NOW()) AND YEAR(data_venda) = YEAR(NOW())
@@ -17,7 +17,7 @@ $query = "SELECT DATE_FORMAT(data_venda, '%d') as dia, COUNT(*) as total, SUM(va
 $db = new Database();
 $vendas_por_dia = $db->select($query);
 
-// Dados para gr·fico de status de vendas
+// Dados para gr√°fico de status de vendas
 $query = "SELECT status_geral, COUNT(*) as total, SUM(valor_total) as valor
          FROM vendas
          WHERE MONTH(data_venda) = MONTH(NOW()) AND YEAR(data_venda) = YEAR(NOW())

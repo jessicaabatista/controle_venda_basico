@@ -215,7 +215,7 @@ if ($tipoRelatorio === 'fluxo_caixa') {
     </nav>
 
     <div class="container">
-        <h1 style="margin-bottom: 30px;">Relatórios</h1>
+        <h1 style="margin-bottom: 30px;">RelatÃ³rios</h1>
 
         <!-- Filtros -->
         <div class="filtros-relatorio">
@@ -230,7 +230,7 @@ if ($tipoRelatorio === 'fluxo_caixa') {
                 </button>
                 <button class="tab-button <?php echo $tipoRelatorio === 'pendencias' ? 'active' : ''; ?>" 
                         onclick="mudarRelatorio('pendencias')">
-                    <i class="fas fa-exclamation-triangle"></i> Pendências
+                    <i class="fas fa-exclamation-triangle"></i> PendÃªncias
                 </button>
             </div>
 
@@ -238,7 +238,7 @@ if ($tipoRelatorio === 'fluxo_caixa') {
                 <input type="hidden" name="tipo" id="tipoRelatorio" value="<?php echo $tipoRelatorio; ?>">
 
                 <div class="form-group" style="margin-bottom: 0;">
-                    <label>Data Início</label>
+                    <label>Data InÃ­cio</label>
                     <input type="date" name="data_inicio" value="<?php echo $dataInicio; ?>">
                 </div>
 
@@ -248,7 +248,7 @@ if ($tipoRelatorio === 'fluxo_caixa') {
                 </div>
 
                 <div style="display: flex; gap: 10px; align-items: flex-end;">
-                    <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+                    <button type="submit" class="btn btn-primary">Gerar RelatÃ³rio</button>
                     <a href="relatorios.php" class="btn btn-secondary">Limpar</a>
                 </div>
             </form>

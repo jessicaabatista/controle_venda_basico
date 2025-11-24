@@ -30,7 +30,7 @@ function atualizarKPIs(dados) {
     document.getElementById('parcVencidas').textContent = formatarMoeda(vencidas);
     document.getElementById('qtdVencidas').textContent = qtdVencidas + ' parcelas';
 
-    // KPI de Próximas Cobranças
+    // KPI de PrÃ³ximas CobranÃ§as
     const totalProximas = dados.proximas.reduce((sum, item) => sum + parseFloat(item.saldo_parcela), 0);
     document.getElementById('proximasCobr').textContent = formatarMoeda(totalProximas);
     document.getElementById('qtdProximas').textContent = dados.proximas.length + ' parcelas';
@@ -176,7 +176,7 @@ function renderizarProximasCobrancas(dados) {
     container.innerHTML = '';
 
     if (dados.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: #999;">Nenhuma cobrança próxima</p>';
+        container.innerHTML = '<p style="text-align: center; color: #999;">Nenhuma cobranÃ§a prÃ³xima</p>';
         return;
     }
 
@@ -189,7 +189,7 @@ function renderizarProximasCobrancas(dados) {
                 <th>Parcela</th>
                 <th>Valor</th>
                 <th>Vencimento</th>
-                <th>Ação</th>
+                <th>AÃ§Ã£o</th>
             </tr>
         </thead>
         <tbody>

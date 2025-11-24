@@ -32,7 +32,7 @@ $clientes = $cliente_obj->listar();
 
     <div class="container">
         <div class="list-header">
-            <h1>Gestão de Clientes</h1>
+            <h1>GestÃ£o de Clientes</h1>
             <button onclick="abrirModalNovoCliente()" class="btn btn-primary">+ Novo Cliente</button>
         </div>
 
@@ -45,7 +45,7 @@ $clientes = $cliente_obj->listar();
                         <th>Telefone</th>
                         <th>Total de Vendas</th>
                         <th>Valor Total</th>
-                        <th>Ações</th>
+                        <th>AÃ§Ãµes</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -92,7 +92,7 @@ $clientes = $cliente_obj->listar();
                 </div>
 
                 <div class="form-group">
-                    <label>Endereço</label>
+                    <label>EndereÃ§o</label>
                     <input type="text" id="enderecoCliente">
                 </div>
 
@@ -102,7 +102,7 @@ $clientes = $cliente_obj->listar();
                 </div>
 
                 <div class="form-group">
-                    <label>Observaçõesções</label>
+                    <label>ObservaÃ§Ãµes</label>
                     <textarea id="obsCliente" rows="3"></textarea>
                 </div>
 

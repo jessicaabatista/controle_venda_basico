@@ -6,12 +6,12 @@ if (!isset($_SESSION['id_usuario'])) {
     exit;
 }
 
-// Função auxiliar para verificar autenticação
+// FunÃ§Ã£o auxiliar para verificar autenticaÃ§Ã£o
 function verificarAutenticacao() {
     return isset($_SESSION['id_usuario']);
 }
 
-// Função para obter usuário autenticado
+// FunÃ§Ã£o para obter usuÃ¡rio autenticado
 function obterUsuarioAutenticado() {
     return [
         'id_usuario' => $_SESSION['id_usuario'],
@@ -20,7 +20,7 @@ function obterUsuarioAutenticado() {
     ];
 }
 
-// Função para logout
+// FunÃ§Ã£o para logout
 function logout() {
     session_destroy();
     header('Location: login.php');

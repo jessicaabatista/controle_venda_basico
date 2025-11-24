@@ -21,7 +21,7 @@ if (!$cliente) {
 
 $historico = $cliente_obj->obterHistorico($idCliente);
 
-// Calcular estatísticas
+// Calcular estatÃ­sticas
 $totalGasto = 0;
 $totalPago = 0;
 $saldoDevendo = 0;
@@ -163,7 +163,7 @@ foreach ($historico as $venda) {
                 </div>
 
                 <div class="info-row">
-                    <span class="info-label">Endereço:</span>
+                    <span class="info-label">EndereÃ§o:</span>
                     <span class="info-value"><?php echo htmlspecialchars($cliente['endereco'] ?? '-'); ?></span>
                 </div>
 
@@ -179,7 +179,7 @@ foreach ($historico as $venda) {
 
                 <?php if ($cliente['observacoes']): ?>
                 <div class="info-row">
-                    <span class="info-label">Observaçõesções:</span>
+                    <span class="info-label">ObservaÃ§Ãµes:</span>
                 </div>
                 <p><?php echo nl2br(htmlspecialchars($cliente['observacoes'])); ?></p>
                 <?php endif; ?>
@@ -213,9 +213,9 @@ foreach ($historico as $venda) {
             </div>
         </div>
 
-        <!-- Histórico de Vendas -->
+        <!-- HistÃ³rico de Vendas -->
         <div class="card">
-            <h2>Histórico de Vendas</h2>
+            <h2>HistÃ³rico de Vendas</h2>
             <?php if (empty($historico)): ?>
                 <p style="text-align: center; color: #999; padding: 30px;">Nenhuma venda registrada para este cliente</p>
             <?php else: ?>
@@ -229,7 +229,7 @@ foreach ($historico as $venda) {
                         <th>Valor Pago</th>
                         <th>Saldo</th>
                         <th>Status</th>
-                        <th>Ação</th>
+                        <th>AÃ§Ã£o</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -296,7 +296,7 @@ foreach ($historico as $venda) {
                 </div>
 
                 <div class="form-group">
-                    <label>Endereço</label>
+                    <label>EndereÃ§o</label>
                     <input type="text" id="enderecoCliente" value="<?php echo htmlspecialchars($cliente['endereco'] ?? ''); ?>">
                 </div>
 
@@ -306,7 +306,7 @@ foreach ($historico as $venda) {
                 </div>
 
                 <div class="form-group">
-                    <label>Observaçõesções</label>
+                    <label>ObservaÃ§Ãµes</label>
                     <textarea id="obsCliente" rows="3"><?php echo htmlspecialchars($cliente['observacoes'] ?? ''); ?></textarea>
                 </div>
 
@@ -358,7 +358,7 @@ foreach ($historico as $venda) {
         });
 
         function confirmarDeletarCliente(idCliente) {
-            if (confirm('Tem certeza que deseja deletar este cliente? Esta ação não pode ser desfeita.')) {
+            if (confirm('Tem certeza que deseja deletar este cliente? Esta aÃ§Ã£o nÃ£o pode ser desfeita.')) {
                 fetch('../api/clientes/deletar.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

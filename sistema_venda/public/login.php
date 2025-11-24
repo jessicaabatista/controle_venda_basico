@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: dashboard.php');
         exit;
     } else {
-        $erro = 'Email ou senha inv·lidos';
+        $erro = 'Email ou senha inv√°lidos';
     }
 }
 
@@ -149,7 +149,7 @@ if (isset($_SESSION['id_usuario'])) {
             </form>
 
             <div class="registro-link">
-                N„o tem conta? <a href="registro.php">Registre-se aqui</a>
+                N√£o tem conta? <a href="registro.php">Registre-se aqui</a>
             </div>
         </div>
     </div>

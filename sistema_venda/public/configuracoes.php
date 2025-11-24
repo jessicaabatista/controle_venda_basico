@@ -17,12 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $config->definir('telefone_empresa', $_POST['telefone_empresa']);
         $config->definir('endereco_empresa', $_POST['endereco_empresa']);
         $config->definir('cnpj_empresa', $_POST['cnpj_empresa']);
-        $sucesso = 'Configurações da empresa salvas com sucesso!';
+        $sucesso = 'ConfiguraÃ§Ãµes da empresa salvas com sucesso!';
     } elseif ($secao === 'pagamento') {
         $config->definir('multa_atraso', $_POST['multa_atraso']);
         $config->definir('juros_mensais', $_POST['juros_mensais']);
         $config->definir('dias_carencia', $_POST['dias_carencia']);
-        $sucesso = 'Configurações de pagamento salvas com sucesso!';
+        $sucesso = 'ConfiguraÃ§Ãµes de pagamento salvas com sucesso!';
     } elseif ($secao === 'email') {
         $config->definir('email_host', $_POST['email_host']);
         $config->definir('email_port', $_POST['email_port']);
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $config->definir('email_pass', $_POST['email_pass']);
         $config->definir('email_de', $_POST['email_de']);
         $config->definir('notificar_pagamento', $_POST['notificar_pagamento'] ?? '0');
-        $sucesso = 'Configurações de email salvas com sucesso!';
+        $sucesso = 'ConfiguraÃ§Ãµes de email salvas com sucesso!';
     }
 }
 
@@ -43,7 +43,7 @@ $email = $config->obterConfiguracoesEmail();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurações - Sistema de Semi-Joias</title>
+    <title>ConfiguraÃ§Ãµes - Sistema de Semi-Joias</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
         .config-container {
@@ -193,7 +193,7 @@ $email = $config->obterConfiguracoesEmail();
             <a href="dashboard.php" class="nav-link">Dashboard</a>
             <a href="vendas.php" class="nav-link">Vendas</a>
             <a href="clientes.php" class="nav-link">Clientes</a>
-            <a href="configuracoes.php" class="nav-link active">?? Configurações</a>
+            <a href="configuracoes.php" class="nav-link active">?? ConfiguraÃ§Ãµes</a>
             <div class="nav-user">
                 <a href="logout.php" class="nav-logout">Sair</a>
             </div>
@@ -201,7 +201,7 @@ $email = $config->obterConfiguracoesEmail();
     </nav>
 
     <div class="container">
-        <h1 style="margin-bottom: 30px;">Configurações do Sistema</h1>
+        <h1 style="margin-bottom: 30px;">ConfiguraÃ§Ãµes do Sistema</h1>
 
         <div class="config-container">
             <!-- Menu Lateral -->
@@ -211,15 +211,15 @@ $email = $config->obterConfiguracoesEmail();
                     ?? Dados da Empresa
                 </a>
                 <a href="#" class="config-menu-item" onclick="mudarSecao('pagamento', event)">
-                    ?? Configurações de Pagamento
+                    ?? ConfiguraÃ§Ãµes de Pagamento
                 </a>
-                <h3 style="margin-top: 20px;">Comunicação</h3>
+                <h3 style="margin-top: 20px;">ComunicaÃ§Ã£o</h3>
                 <a href="#" class="config-menu-item" onclick="mudarSecao('email', event)">
                     ?? Email
                 </a>
             </div>
 
-            <!-- Conteúdo -->
+            <!-- ConteÃºdo -->
             <div class="config-content">
                 <?php if ($sucesso): ?>
                 <div class="alerta sucesso">
@@ -233,12 +233,12 @@ $email = $config->obterConfiguracoesEmail();
                 </div>
                 <?php endif; ?>
 
-                <!-- Seção: Dados da Empresa -->
+                <!-- SeÃ§Ã£o: Dados da Empresa -->
                 <div id="empresa" class="config-section active">
                     <h2>Dados da Empresa</h2>
 
                     <div class="secao-info">
-                        <p>?? Cadastre as informações principais da sua empresa. Estes dados serão utilizados em relatórios e comunicações com clientes.</p>
+                        <p>?? Cadastre as informaÃ§Ãµes principais da sua empresa. Estes dados serÃ£o utilizados em relatÃ³rios e comunicaÃ§Ãµes com clientes.</p>
                     </div>
 
                     <form method="POST">
@@ -275,20 +275,20 @@ $email = $config->obterConfiguracoesEmail();
                         </div>
 
                         <div class="form-group">
-                            <label>Endereço</label>
+                            <label>EndereÃ§o</label>
                             <input type="text" name="endereco_empresa" value="<?php echo htmlspecialchars($empresa['endereco_empresa']); ?>" style="width: 100%;">
                         </div>
 
-                        <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Salvar Configurações</button>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Salvar ConfiguraÃ§Ãµes</button>
                     </form>
                 </div>
 
-                <!-- Seção: Pagamento -->
+                <!-- SeÃ§Ã£o: Pagamento -->
                 <div id="pagamento" class="config-section">
-                    <h2>Configurações de Pagamento</h2>
+                    <h2>ConfiguraÃ§Ãµes de Pagamento</h2>
 
                     <div class="secao-info">
-                        <p>? Configure as políticas de cobrança de multa e juros sobre atrasos no pagamento.</p>
+                        <p>? Configure as polÃ­ticas de cobranÃ§a de multa e juros sobre atrasos no pagamento.</p>
                     </div>
 
                     <form method="POST">
@@ -311,26 +311,26 @@ $email = $config->obterConfiguracoesEmail();
 
                             <div>
                                 <div class="form-group">
-                                    <label>Dias de Carência</label>
+                                    <label>Dias de CarÃªncia</label>
                                     <input type="number" name="dias_carencia" value="<?php echo $pagamento['dias_carencia']; ?>" min="0" step="1">
                                 </div>
                             </div>
                         </div>
 
                         <div class="secao-info">
-                            <p><strong>Exemplo:</strong> Com 5 dias de carência, multa de 2% e juros de 1% ao mês, um boleto de R$ 100,00 com 10 dias de atraso custará R$ 103,00 (R$ 100 + R$ 2 de multa + R$ 1 de juros).</p>
+                            <p><strong>Exemplo:</strong> Com 5 dias de carÃªncia, multa de 2% e juros de 1% ao mÃªs, um boleto de R$ 100,00 com 10 dias de atraso custarÃ¡ R$ 103,00 (R$ 100 + R$ 2 de multa + R$ 1 de juros).</p>
                         </div>
 
-                        <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Salvar Configurações</button>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Salvar ConfiguraÃ§Ãµes</button>
                     </form>
                 </div>
 
-                <!-- Seção: Email -->
+                <!-- SeÃ§Ã£o: Email -->
                 <div id="email" class="config-section">
-                    <h2>Configurações de Email</h2>
+                    <h2>ConfiguraÃ§Ãµes de Email</h2>
 
                     <div class="secao-info">
-                        <p>?? Configure um servidor SMTP para enviar notificações de pagamento e outros emails automatizados.</p>
+                        <p>?? Configure um servidor SMTP para enviar notificaÃ§Ã£es de pagamento e outros emails automatizados.</p>
                     </div>
 
                     <form method="POST">
@@ -353,7 +353,7 @@ $email = $config->obterConfiguracoesEmail();
 
                             <div>
                                 <div class="form-group">
-                                    <label>Usuário (Email)</label>
+                                    <label>UsuÃ¡rio (Email)</label>
                                     <input type="email" name="email_user" value="<?php echo htmlspecialchars($email['email_user']); ?>">
                                 </div>
                             </div>
@@ -374,15 +374,15 @@ $email = $config->obterConfiguracoesEmail();
                         <div class="form-group">
                             <label>
                                 <input type="checkbox" name="notificar_pagamento" value="1" <?php echo $email['notificar_pagamento'] ? 'checked' : ''; ?>>
-                                Enviar notificação quando receber pagamento
+                                Enviar notificaÃ§Ã£o quando receber pagamento
                             </label>
                         </div>
 
                         <div class="secao-info">
-                            <p><strong>Gmail:</strong> Use sua senha de app (não a senha da conta). Ative "Acesso a apps menos seguros" nas configurações da conta.</p>
+                            <p><strong>Gmail:</strong> Use sua senha de app (nÃ£o a senha da conta). Ative "Acesso a apps menos seguros" nas ConfiguraÃ§Ãµes da conta.</p>
                         </div>
 
-                        <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Salvar Configurações</button>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Salvar ConfiguraÃ§Ãµes</button>
                     </form>
                 </div>
             </div>
@@ -394,7 +394,7 @@ $email = $config->obterConfiguracoesEmail();
         function mudarSecao(secao, event) {
             event.preventDefault();
 
-            // Ocultar todas as seções
+            // Ocultar todas as seÃ§Ãµes
             document.querySelectorAll('.config-section').forEach(el => {
                 el.classList.remove('active');
             });
@@ -404,7 +404,7 @@ $email = $config->obterConfiguracoesEmail();
                 el.classList.remove('active');
             });
 
-            // Mostrar seção selecionada
+            // Mostrar seÃ§Ã£o selecionada
             document.getElementById(secao).classList.add('active');
 
             // Marcar item do menu como ativo

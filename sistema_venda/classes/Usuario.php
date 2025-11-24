@@ -22,7 +22,7 @@ class Usuario {
         $stmt = $this->db->execute($query, 's', [$email]);
         
         if ($stmt->get_result()->num_rows > 0) {
-            return ['sucesso' => false, 'mensagem' => 'Email j· registrado'];
+            return ['sucesso' => false, 'mensagem' => 'Email j√° registrado'];
         }
 
         $senhaHash = password_hash($senha, PASSWORD_BCRYPT);
@@ -32,11 +32,11 @@ class Usuario {
         if ($stmt) {
             return [
                 'sucesso' => true,
-                'mensagem' => 'Usu·rio criado com sucesso',
+                'mensagem' => 'Usu√°rio criado com sucesso',
                 'id_usuario' => $this->db->getConnection()->insert_id
             ];
         }
-        return ['sucesso' => false, 'mensagem' => 'Erro ao criar usu·rio'];
+        return ['sucesso' => false, 'mensagem' => 'Erro ao criar usu√°rio'];
     }
 
     public function obter($idUsuario) {

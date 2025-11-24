@@ -5,12 +5,12 @@ require_once '../../classes/Database.php';
 require_once '../../classes/Financeiro.php';
 require_once '../../classes/Venda.php';
 
-// Verificar mÈtodo HTTP
+// Verificar m√©todo HTTP
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'MÈtodo n„o permitido'
+        'mensagem' => 'M√©todo n√£o permitido'
     ]);
     exit;
 }
@@ -21,7 +21,7 @@ if ($jsonInput === false) {
     http_response_code(400);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'Erro ao ler dados da requisiÁ„o'
+        'mensagem' => 'Erro ao ler dados da requisi√ß√£o'
     ]);
     exit;
 }
@@ -31,19 +31,19 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     http_response_code(400);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'JSON inv·lido: ' . json_last_error_msg()
+        'mensagem' => 'JSON inv√°lido: ' . json_last_error_msg()
     ]);
     exit;
 }
 
-// Validar campos obrigatÛrios
+// Validar campos obrigat√≥rios
 $camposObrigatorios = ['id_venda', 'valor_pago', 'forma_pagamento'];
 foreach ($camposObrigatorios as $campo) {
     if (!isset($dados[$campo]) || $dados[$campo] === '') {
         http_response_code(400);
         echo json_encode([
             'sucesso' => false,
-            'mensagem' => "Campo obrigatÛrio ausente: $campo"
+            'mensagem' => "Campo obrigat√≥rio ausente: $campo"
         ]);
         exit;
     }
@@ -62,7 +62,7 @@ if ($idVenda === false || $idVenda <= 0) {
     http_response_code(400);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'ID da venda inv·lido'
+        'mensagem' => 'ID da venda inv√°lido'
     ]);
     exit;
 }
@@ -71,7 +71,7 @@ if ($valorPago === false || $valorPago <= 0) {
     http_response_code(400);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'Valor do pagamento inv·lido'
+        'mensagem' => 'Valor do pagamento inv√°lido'
     ]);
     exit;
 }
@@ -80,7 +80,7 @@ if ($idParcela !== null && ($idParcela === false || $idParcela <= 0)) {
     http_response_code(400);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'ID da parcela inv·lido'
+        'mensagem' => 'ID da parcela inv√°lido'
     ]);
     exit;
 }
@@ -89,7 +89,7 @@ if ($idItem !== null && ($idItem === false || $idItem <= 0)) {
     http_response_code(400);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'ID do item inv·lido'
+        'mensagem' => 'ID do item inv√°lido'
     ]);
     exit;
 }
@@ -119,15 +119,15 @@ try {
     // Log do erro para debugging
     error_log("Erro ao processar pagamento: " . $e->getMessage());
     
-    // Determinar cÛdigo de status baseado no tipo de erro
+    // Determinar c√≥digo de status baseado no tipo de erro
     $mensagem = $e->getMessage();
     $statusCode = 400;
     
-    if (strpos($mensagem, 'n„o encontrada') !== false || strpos($mensagem, 'n„o encontrado') !== false) {
+    if (strpos($mensagem, 'n√£o encontrada') !== false || strpos($mensagem, 'n√£o encontrado') !== false) {
         $statusCode = 404;
-    } elseif (strpos($mensagem, 'j· est·') !== false) {
+    } elseif (strpos($mensagem, 'j√° est√°') !== false) {
         $statusCode = 409; // Conflict
-    } elseif (strpos($mensagem, 'inv·lido') !== false) {
+    } elseif (strpos($mensagem, 'inv√°lido') !== false) {
         $statusCode = 422; // Unprocessable Entity
     }
     

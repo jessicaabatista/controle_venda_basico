@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'M?todo n?o permitido'
+        'mensagem' => 'Método não permitido'
     ]);
     exit;
 }
@@ -21,7 +21,7 @@ if ($jsonInput === false) {
     http_response_code(400);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'Erro ao ler dados da requisi??o'
+        'mensagem' => 'Erro ao ler dados da requisição'
     ]);
     exit;
 }
@@ -89,7 +89,7 @@ foreach ($dados['itens'] as $index => $item) {
         http_response_code(400);
         echo json_encode([
             'sucesso' => false,
-            'mensagem' => "Item {$index}: campos c?digo, descri??o e valor_unit?rio s?o obrigat?rios"
+            'mensagem' => "Item {$index}: campos c?digo, descrição e valor_unit?rio s?o obrigat?rios"
         ]);
         exit;
     }
@@ -128,7 +128,7 @@ foreach ($dados['itens'] as $index => $item) {
         http_response_code(400);
         echo json_encode([
             'sucesso' => false,
-            'mensagem' => "Item {$index}: descri??o deve ter entre 3 e 255 caracteres"
+            'mensagem' => "Item {$index}: descrição deve ter entre 3 e 255 caracteres"
         ]);
         exit;
     }
@@ -138,7 +138,7 @@ $venda = new Venda();
 $financeiro = new Financeiro();
 
 try {
-    // Usar transa��o atrav�s da classe Database
+    // Usar transação através da classe Database
     $database = new Database();
     $connection = $database->getConnection();
     $connection->begin_transaction();
