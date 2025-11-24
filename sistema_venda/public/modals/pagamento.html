@@ -1,0 +1,299 @@
+<!-- Modal de Pagamento -->
+<div id="modalPagamento" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Registrar Pagamento</h2>
+            <span class="modal-close" onclick="fecharModal()">&times;</span>
+        </div>
+
+        <form id="formPagamento" class="modal-body">
+            <input type="hidden" id="idVendaPagamento">
+            
+            <div class="form-group">
+                <label>Tipo de Pagamento</label>
+                <select id="tipoPagamento" onchange="atualizarTipoPagamento()" required>
+                    <option value="total">Venda Total</option>
+                    <option value="parcela">Parcela Específica</option>
+                    <option value="item">Item Específico</option>
+                </select>
+                <small class="form-error" id="erroTipo"></small>
+            </div>
+
+            <div class="form-group" id="selectParcela" style="display: none;">
+                <label>Parcela</label>
+                <select id="idParcela" onchange="atualizarValorParcela()">
+                    <option value="">Escolha uma parcela</option>
+                </select>
+                <small class="form-error" id="erroParcela"></small>
+            </div>
+
+            <div class="form-group" id="selectItem" style="display: none;">
+                <label>Item</label>
+                <select id="idItem" onchange="atualizarValorItem()">
+                    <option value="">Escolha um item</option>
+                </select>
+                <small class="form-error" id="erroItem"></small>
+            </div>
+
+            <div class="form-group">
+                <label>Valor a Pagar *</label>
+                <input type="number" id="valorPago" step="0.01" min="0" required oninput="atualizarSaldoApos()">
+                <small class="form-error" id="erroValor"></small>
+            </div>
+
+            <div class="form-group">
+                <label>Forma de Pagamento *</label>
+                <select id="formaPagamento" required>
+                    <option value="">Selecione...</option>
+                    <option value="dinheiro">Dinheiro</option>
+                    <option value="cartao_credito">Cartão de Crédito</option>
+                    <option value="cartao_debito">Cartão de Débito</option>
+                    <option value="pix">PIX</option>
+                    <option value="transferencia">Transferência Bancária</option>
+                    <option value="boleto">Boleto</option>
+                </select>
+                <small class="form-error" id="erroForma"></small>
+            </div>
+
+            <div class="form-group">
+                <label>Observações</label>
+                <textarea id="observacoesPagamento" rows="3" placeholder="Observações sobre o pagamento..."></textarea>
+            </div>
+
+            <div class="resumo-pagamento">
+                <div class="resumo-row">
+                    <label>Saldo Atual:</label>
+                    <span id="saldoAtual">R$ 0,00</span>
+                </div>
+                <div class="resumo-row">
+                    <label>Valor a Pagar:</label>
+                    <span id="valorPagar">R$ 0,00</span>
+                </div>
+                <div class="resumo-row total">
+                    <label>Saldo Restante:</label>
+                    <span id="saldoApos">R$ 0,00</span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Registrar Pagamento</button>
+                <button type="button" class="btn btn-secondary" onclick="fecharModal()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal.show {
+    display: block;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    padding: 20px 30px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px 10px 0 0;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: white;
+}
+
+.modal-close {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+.modal-close:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    padding: 30px;
+}
+
+.modal-footer {
+    padding: 20px 30px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    background: #f8f9fa;
+    border-radius: 0 0 10px 10px;
+}
+
+.resumo-pagamento {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    border: 1px solid #dee2e6;
+}
+
+.resumo-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.resumo-row:last-child {
+    border-bottom: none;
+}
+
+.resumo-row.total {
+    font-weight: bold;
+    font-size: 16px;
+    color: #667eea;
+    padding-top: 12px;
+    border-top: 2px solid #667eea;
+}
+
+.resumo-row label {
+    color: #666;
+    margin: 0;
+    font-weight: 500;
+}
+
+.resumo-row span {
+    font-weight: 600;
+    color: #333;
+}
+
+.form-error {
+    color: #ff6b6b;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+}
+
+.form-group input:invalid,
+.form-group select:invalid {
+    border-color: #ff6b6b;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-secondary {
+    background: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.btn-secondary:hover {
+    background: #e8e8e8;
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        margin: 10px auto;
+        max-height: 95vh;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .modal-header {
+        padding: 15px 20px;
+    }
+    
+    .modal-footer {
+        padding: 15px 20px;
+        flex-direction: column;
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+</style>
