@@ -10,7 +10,7 @@ function abrirModalPagamento(idVenda) {
     fetch(`api/vendas/detalhes.php?id=${idVenda}`)
         .then(response => {
             if (!response.ok) {
-                throw new Error('Erro ao buscar dados da venda');
+                throw new Error('Erro ao buscar dados');
             }
             return response.json();
         })
@@ -57,7 +57,7 @@ function abrirModalPagamento(idVenda) {
         })
         .catch(error => {
             console.error('Erro:', error);
-            alert('Erro ao carregar dados da venda. Tente novamente.');
+            FeedbackVisual.mostrarNotificacao('erro', 'Erro ao carregar dados. Tente novamente.');
         });
 }
 
@@ -87,8 +87,6 @@ function limparFormularioPagamento() {
 
 function atualizarTipoPagamento() {
     const tipo = document.getElementById('tipoPagamento').value;
-    const selectParcela = document.getElementById('selectParcela');
-    const selectItem = document.getElementById('selectItem');
 
     // Limpar erros
     document.getElementById('erroParcela').textContent = '';
@@ -205,7 +203,6 @@ function validarFormularioPagamento() {
 
 // Adicionar campos de erro ao modal
 document.addEventListener('DOMContentLoaded', function() {
-    // Adicionar spans de erro se não existirem
     const formPagamento = document.getElementById('formPagamento');
     if (formPagamento && !document.getElementById('erroValor')) {
         const valorPago = document.getElementById('valorPago');
@@ -225,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-document.getElementById('formPagamento').addEventListener('submit', function(e) {
+document.getElementById('formPagamento')?.addEventListener('submit', function(e) {
     e.preventDefault();
 
     if (!validarFormularioPagamento()) {
@@ -274,16 +271,15 @@ document.getElementById('formPagamento').addEventListener('submit', function(e) 
     })
     .catch(error => {
         console.error('Erro:', error);
-        FeedbackVisual.mostrarNotificacao('erro', 'Erro ao processar pagamento. Verifique sua conexão e tente novamente.');
+        FeedbackVisual.mostrarNotificacao('erro', 'Erro ao processar pagamento. Verifique sua conexão.');
     })
     .finally(() => {
-        // Restaurar botão
         FeedbackVisual.restaurarElemento(submitBtn);
     });
 });
 
 // Fechar modal ao clicar no X
-document.querySelector('.modal-close').addEventListener('click', fecharModal);
+document.querySelector('.modal-close')?.addEventListener('click', fecharModal);
 
 // Fechar modal ao clicar fora dele
 window.addEventListener('click', function(event) {
@@ -294,20 +290,19 @@ window.addEventListener('click', function(event) {
 });
 
 // Atualizar saldo quando digitar valor
-document.getElementById('valorPago').addEventListener('input', function() {
-    // Limpar erro de valor
+document.getElementById('valorPago')?.addEventListener('input', function() {
     document.getElementById('erroValor').textContent = '';
     atualizarSaldoApos();
 });
 
 // Validar valor máximo
-document.getElementById('valorPago').addEventListener('change', function() {
+document.getElementById('valorPago')?.addEventListener('change', function() {
     const valor = parseFloat(this.value);
     const maximo = parseFloat(this.max);
     
     if (valor > maximo) {
         this.value = maximo.toFixed(2);
-        document.getElementById('erroValor').textContent = `Valor máximo é R$ ${maximo.toFixed(2)}`;
+        FeedbackVisual.mostrarNotificacao('aviso', `Valor máximo é R$ ${maximo.toFixed(2)}`);
     }
 });
 

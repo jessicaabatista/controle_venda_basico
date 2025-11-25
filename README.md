@@ -1,227 +1,464 @@
-# Sistema de Controle de Vendas de Semi-Joias
+# Sistema de Controle de Vendas
 
-Um sistema completo e flexível para controle de vendas de semi-joias com foco em gestão financeira robusta e parcelamento dinâmico.
+Um sistema completo para gestão de vendas desenvolvido em PHP puro com arquitetura orientada a objetos, focado em controle financeiro avançado, parcelamento flexível e dashboard interativo em tempo real.
 
-## Objetivo do Projeto
+[![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://php.net)
+[![MySQL](https://img.shields.io/badge/MySQL-5.7%2B-orange.svg)](https://mysql.com)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Desenvolver um Sistema de Controle de Vendas de Semi-Joias focado em flexibilidade no cadastro de pedidos e controle financeiro robusto (pagamentos parciais e dinâmicos).
+## 📋 Sobre o Sistema
 
-## Stack Tecnológico
+Sistema empresarial desenvolvido em PHP puro para gestão completa de vendas, permitindo controle total sobre vendas, clientes e finanças. Com interface moderna e intuitiva, oferece funcionalidades avançadas como parcelamento dinâmico, pagamentos parciais e relatórios detalhados.
 
-- **Backend**: PHP Estruturado (Sem uso de frameworks pesados, foco em código funcional e limpo)
-- **Frontend**: HTML5, CSS3 e JavaScript (Vanilla)
-- **Banco de Dados**: MySQL
-- **Interatividade**: Uso intensivo de AJAX para operações dinâmicas
-- **Arquitetura**: Código organizado, moderno e limpo, com separa��o clara entre l�gica, conex�o com banco e visualiza��o
+### 🎯 Diferenciais Principais
 
-## Requisitos do Sistema
+- **🔄 Parcelamento Flexível**: Até 24x com recálculo automático inteligente
+- **💰 Pagamentos Parciais**: Aceita valores menores que o total com ajuste automático
+- **📊 Dashboard Completo**: 6 gráficos interativos em tempo real com Chart.js
+- **🔌 API RESTful**: Integração fácil com outros sistemas
+- **📧 Notificações Automáticas**: Lembretes de pagamento por email
+- **📈 Relatórios Detalhados**: Exportação CSV para análise externa
+- **📱 Totalmente Responsivo**: Adaptado para mobile e desktop
+- **🔒 Segurança Avançada**: Proteção contra CSRF, XSS e SQL Injection
 
-### Servidor Web
-- PHP 7.4 ou superior
-- MySQL 5.7 ou superior
-- Apache ou Nginx
-- Extens�es PHP: mysqli, json, mbstring
+## ✨ Funcionalidades Principais
 
-### Navegadores Suportados
-- Chrome 80+
-- Firefox 75+
-- Safari 13+
-- Edge 80+
+### 👥 Gestão de Usuários
+- Sistema de autenticação seguro com sessões PHP
+- Registro e login de usuários
+- Proteção contra brute force
+- Timeout de sessão configurável
 
-## Instala��o
+### 🏪 Gestão de Clientes
+- Cadastro completo com validações rigorosas
+- Máscaras automáticas para telefone e CPF/CNPJ
+- Histórico completo de compras
+- Status ativo/inativo
+- Observações personalizadas
+- Busca instantânea via AJAX
 
-### 1. Clonar o Projeto
-```bash
-git clone <repositorio-do-projeto>
-cd sistema_venda
-```
-
-### 2. Configurar Banco de Dados
-```sql
--- Criar banco de dados
-CREATE DATABASE semi_joias;
-
--- Importar schema
-mysql -u usuario -p semi_joias < sql/schema.sql
-```
-
-### 3. Configurar Conex�o
-Edite o arquivo `config/database.php`:
-```php
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'semi_joias');
-define('DB_USER', 'seu_usuario');
-define('DB_PASS', 'sua_senha');
-```
-
-### 4. Configurar Diret�rios
-Garanta que os diret�rios tenham permiss�es de escrita:
-```bash
-chmod 755 public/
-chmod 755 public/assets/
-chmod 755 public/uploads/
-```
-
-### 5. Acessar o Sistema
-Abra o navegador e acesse: `http://seu-dominio/sistema_venda/public/`
-
-## Funcionalidades Principais
-
-### Autentica��o
-- Login seguro com sess�o
-- Logout automático
-- Prote��o contra CSRF
-
-### Gest�o de Clientes
-- Cadastro completo de clientes
-- Valida��o de CPF/CNPJ
-- Formata��o automática de telefone
-- Hist�rico de compras
-
-### Gest�o de Vendas
+### 💳 Sistema de Vendas Avançado
 - **Cadastro "On-the-Fly"**: Produtos cadastrados no momento da venda
-- **M�ltiplos Itens**: Venda funciona como pedido com diversas pe�as
-- **Status por Item**: Controle individual de pagamento por item
-- **Parcelamento Dinâmico**: Geraço automática de parcelas
+- **Múltiplos Itens**: Sistema funciona como pedido com diversas peças
+- **Status Individual**: Controle de pagamento por item
+- **Cancelamento**: Vendas podem ser canceladas mantendo histórico
+- **Validações Rigorosas**: Frontend e backend
 
-### Controle Financeiro Avan�ado
-- **Pagamentos Parciais**: Aceita pagamentos menores que o total
-- **Associa��o Flex�vel**: Pagamento para pedido total ou item espec�fico
-- **Edi��o de Valor**: Valores de parcelas podem ser editados
-- **Rec�lculo Automático**: Ajuste automático do saldo restante
+### 💰 Controle Financeiro Robusto
+- **Pagamentos Parciais**: Aceita valores menores que o total
+- **Parcelamento Dinâmico**: Até 24 parcelas com recálculo automático
+- **Edição de Valores**: Parcelas podem ter valores editados
+- **Múltiplas Formas**: Dinheiro, cartão, PIX, transferência, boleto
+- **Recálculo Inteligente**: Ajuste automático de saldos restantes
 
-### Dashboard e Relatórios
+### 📊 Dashboard Interativo
 - **KPIs em Tempo Real**: Vendas, recebimentos, pendências
-- **Gráficos Interativos**: Visualiza��o de dados com Chart.js
-- **Alertas de Cobran�a**: Pr�ximos vencimentos e parcelas vencidas
-- **Relatórios Export�veis**: CSV, PDF e impress�o
+- **6 Gráficos Diferentes**:
+  - Vendas por dia (mês atual)
+  - Status das vendas (pizza)
+  - Top 10 clientes (barra)
+  - Formas de pagamento (pizza)
+  - Evolução mensal (linha)
+  - Produtos mais vendidos (barra)
+- **Alertas de Cobrança**: Próximos vencimentos e vencidas
+- **Métricas Adicionais**: Ticket médio, taxa de conversão, etc.
 
-## Interface do Usu�rio
+### 📈 Relatórios e Exportação
+- **Fluxo de Caixa**: Movimentações por período
+- **Desempenho de Vendas**: Análise por cliente
+- **Pendências Financeiras**: Vencidas e em aberto
+- **Exportação CSV**: Para análise externa
+- **Filtros Avançados**: Data, cliente, status
 
-### Telas Dispon�veis
-1. **Login** (`login.php`) - Autentica��o segura
-2. **Dashboard** (`dashboard.php`) - KPIs e gráficos
-3. **Nova Venda** (`nova_venda.php`) - PDV completo
-4. **Vendas** (`vendas.php`) - Listagem e filtros
-5. **Detalhes da Venda** (`detalhes_venda.php`) - Gest�o financeira
-6. **Clientes** (`clientes.php`) - Gest�o de clientes
-7. **Relatórios** (`relatorios.php`) - Relatórios detalhados
-
-### Design Responsivo
-- Layout adapt�vel para desktop, tablet e mobile
-- Interface moderna com gradientes e sombras
-- Cores consistentes e acess�veis
-- �cones intuitivos (emoji para compatibilidade)
-
-## Estrutura do Projeto
+## 🏗️ Arquitetura do Sistema
 
 ```
 sistema_venda/
-?classes/                 # Classes PHP
-?   ?Database.php        # Conex�o com banco
-?   ?Venda.php          # L�gica de vendas
-?   ?Financeiro.php     # Gest�o financeira
-?   ?Cliente.php        # Gest�o de clientes
-?   ?...
-?config/                 # Arquivos de configura��o
-?   ?database.php       # Configura��o do BD
-?   ?auth.php          # Autentica��o
-?   ?constants.php     # Constantes do sistema
-?public/                 # Arquivos p�blicos
-?   ?assets/           # CSS, JS, imagens
-?   ?api/              # Endpoints AJAX
-?   ?modals/           # Modais HTML
-?   ?*.php             # Telas do sistema
-?sql/                   # Scripts SQL
-?   ?schema.sql        # Estrutura do banco
-?cron/                  # Tarefas agendadas
-    ?processar_lembretes.php
+├── classes/                          # Camada de negócio PHP
+│   ├── Database.php                  # Conexão e operações MySQL (Singleton)
+│   ├── Venda.php                     # Gestão de vendas e pedidos
+│   ├── Financeiro.php                # Controle financeiro e parcelas
+│   ├── Cliente.php                   # CRUD de clientes
+│   ├── Usuario.php                   # Autenticação e usuários
+│   ├── Email.php                     # Envio de notificações
+│   ├── Relatorio.php                 # Geração de relatórios
+│   ├── Configuracao.php              # Configurações do sistema
+│   └── Labels.php                    # Labels e textos do sistema
+├── config/                           # Arquivos de configuração
+│   ├── auth.php                      # Funções de autenticação
+│   ├── config.php                    # Configuração central do sistema
+│   └── constants.php                 # Constantes globais
+├── public/                           # Arquivos públicos acessíveis
+│   ├── assets/                       # Recursos estáticos
+│   │   ├── css/style.css             # Estilos principais (responsivo)
+│   │   └── js/                       # JavaScript modular
+│   │       ├── app.js                # Funções globais e máscaras
+│   │       ├── dashboard.js          # Lógica dos gráficos
+│   │       ├── financeiro.js         # Operações financeiras
+│   │       ├── validacoes.js         # Validações de formulários
+│   │       ├── vendas.js             # Lógica de vendas
+│   │       └── mascaras.js           # Máscaras de formulário
+│   ├── api/                          # Endpoints RESTful
+│   │   ├── clientes/                 # API de clientes
+│   │   ├── dashboard/                # API do dashboard
+│   │   ├── financeiro/               # API financeira
+│   │   ├── relatorios/               # API de relatórios
+│   │   └── vendas/                   # API de vendas
+│   ├── includes/navbar.php           # Navegação reutilizável
+│   ├── modals/pagamento.html         # Janelas modais HTML
+│   ├── dashboard.php                 # Dashboard principal com KPIs
+│   ├── login.php                     # Tela de autenticação
+│   ├── logout.php                    # Logout do sistema
+│   ├── nova_venda.php                # PDV / Nova venda
+│   ├── vendas.php                    # Listagem de vendas
+│   ├── detalhes_venda.php            # Gestão financeira da venda
+│   ├── clientes.php                  # Gestão de clientes
+│   ├── detalhes_cliente.php          # Histórico do cliente
+│   ├── relatorios.php                # Relatórios detalhados
+│   ├── configuracoes.php             # Configurações do sistema
+│   └── registro.php                  # Registro de usuários
+├── sql/                              # Scripts SQL
+│   └── schema.sql                    # Estrutura completa do banco
+├── cron/                             # Tarefas agendadas
+│   ├── processar_lembretes.php       # Envio de lembretes de pagamento
+│   └── logs/                         # Logs das tarefas (criado automaticamente)
+├── logs/                             # Logs do sistema
+├── uploads/                          # Upload de arquivos
+├── .htaccess                         # Configuração Apache
+└── SOLUCAO_ASSETS.md                 # Documentação de solução de assets
 ```
 
-## Banco de Dados
+## 🚀 Instalação Rápida
+
+### 1. Clonar o Projeto
+```bash
+git clone <repositorio-url>
+cd sistema_venda
+```
+
+### 2. Banco de Dados
+```sql
+CREATE DATABASE sistema_vendas CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+mysql -u root -p sistema_vendas < sql/schema.sql
+```
+
+### 3. Configurar Conexão
+Edite `config/config.php` ou use variáveis de ambiente:
+```bash
+export DB_HOST=localhost
+export DB_USER=root
+export DB_PASS=sua_senha
+export DB_NAME=sistema_vendas
+```
+
+### 4. Acessar o Sistema
+```
+http://seu-dominio/sistema_venda/public/
+```
+
+## ⚙️ Configuração
+
+### Variáveis de Ambiente
+```bash
+# Banco de Dados
+DB_HOST=localhost
+DB_USER=root
+DB_PASS=password
+DB_NAME=sistema_vendas
+
+# Aplicação
+APP_ENV=production
+APP_NAME=Sistema de Controle de Vendas
+
+# Email
+SMTP_HOST=smtp.seudominio.com
+SMTP_PORT=587
+SMTP_USER=email@seudominio.com
+SMTP_PASS=senha_email
+SMTP_SECURE=tls
+
+# Logs
+LOG_LEVEL=info
+```
+
+### Configurações via Banco
+```sql
+-- Configurações da empresa
+UPDATE configuracoes SET valor = 'Sua Empresa Ltda' WHERE chave = 'nome_empresa';
+UPDATE configuracoes SET valor = 'contato@empresa.com' WHERE chave = 'email_empresa';
+UPDATE configuracoes SET valor = '(11) 9999-9999' WHERE chave = 'telefone_empresa';
+
+-- Configurações financeiras
+UPDATE configuracoes SET valor = '2.00' WHERE chave = 'multa_atraso';
+UPDATE configuracoes SET valor = '1.00' WHERE chave = 'juros_mensais';
+UPDATE configuracoes SET valor = '5' WHERE chave = 'dias_carencia';
+```
+
+### 🔧 Solução de Problemas com Assets
+Se você encontrar problemas com CSS/JS não carregando, consulte o documento:
+**[SOLUCAO_ASSETS.md](sistema_venda/SOLUCAO_ASSETS.md)**
+
+Este documento contém soluções completas para:
+- Configuração de URLs em desenvolvimento
+- Problemas com .htaccess
+- Testes de diagnóstico
+- Configuração para produção
+
+## 📊 Dashboard e Relatórios
+
+### KPIs Principais
+- **Total de Vendas (Mês)**: Valor e quantidade
+- **Parcelas Vencidas**: Alertas de cobrança
+- **Próximas Cobranças (30 dias)**: Previsão de recebimento
+- **Saldo a Receber**: Total em aberto
+
+### Métricas Adicionais
+- **Ticket Médio**: Valor médio por venda
+- **Taxa de Recebimento**: Percentual pago vs total
+- **Clientes Ativos**: Quantidade de clientes com compras
+- **Vencem Hoje**: Parcelas com vencimento no dia
+
+### Gráficos Interativos
+1. **Vendas por Dia**: Evolução diária do mês atual
+2. **Status das Vendas**: Distribuição por situação
+3. **Top 10 Clientes**: Maiores compradores
+4. **Formas de Pagamento**: Distribuição por método
+5. **Evolução Mensal**: Tendência de crescimento
+6. **Produtos Mais Vendidos**: Ranking de itens
+
+## 🔐 Segurança
+
+### Implementações de Segurança
+- **SQL Injection**: Uso de prepared statements em todas as queries
+- **XSS**: Escapamento HTML com `htmlspecialchars()`
+- **CSRF**: Tokens em formulários sensíveis
+- **Session Hijacking**: Regeneração de ID de sessão
+- **Password Security**: Hash com `password_hash()` (bcrypt)
+- **Input Validation**: Validação rigorosa no frontend e backend
+- **File Upload**: Restrição de extensões e tamanho
+- **Access Control**: Verificação de autenticação em páginas restritas
+
+### Configurações de Segurança
+```php
+// Configurações de senha
+define('PASSWORD_MIN_LENGTH', 8);
+define('PASSWORD_ALGORITHM', PASSWORD_BCRYPT);
+define('PASSWORD_OPTIONS', ['cost' => 12]);
+
+// Proteção contra brute force
+define('MAX_LOGIN_ATTEMPTS', 5);
+define('LOCKOUT_DURATION', 15 * 60); // 15 minutos
+
+// Timeout de sessão
+define('SESSION_TIMEOUT', 30 * 60); // 30 minutos
+```
+
+## 📡 API REST
+
+### Autenticação
+A API utiliza sessões PHP para autenticação. O usuário deve estar logado no sistema para acessar os endpoints.
+
+### Clientes
+```http
+POST /api/clientes/salvar.php
+GET /api/clientes/pesquisa.php?termo=joao
+DELETE /api/clientes/deletar.php?id=123
+```
+
+### Vendas
+```http
+POST /api/vendas/salvar.php
+POST /api/vendas/adicionar_item.php
+DELETE /api/vendas/remover_item.php?id=789
+POST /api/vendas/gerar_parcelas.php
+GET /api/vendas/detalhes.php?id=123
+```
+
+### Financeiro
+```http
+POST /api/financeiro/processar_pagamento.php
+```
+
+### Dashboard
+```http
+GET /api/dashboard/dados.php
+```
+
+### Relatórios
+```http
+GET /api/relatorios/exportar.php?tipo=fluxo_caixa&data_inicio=2024-01-01&data_fim=2024-12-31&formato=csv
+```
+
+## ⏰ Tarefas Agendadas
+
+### Lembretes de Pagamento
+Configurar no crontab do servidor:
+
+```bash
+# Editar crontab
+crontab -e
+
+# Executar diariamente às 9h
+0 9 * * * /usr/bin/php /caminho/completo/sistema_venda/cron/processar_lembretes.php
+
+# Executar a cada hora para testes
+0 * * * * /usr/bin/php /caminho/completo/sistema_venda/cron/processar_lembretes.php
+```
+
+**Critérios de Envio:**
+- Parcelas vencendo nos próximos 5 dias
+- Apenas parcelas não pagas
+- Marca como enviado para evitar duplicidade
+
+### Log do Sistema
+```bash
+# Verificar logs
+tail -f /caminho/completo/sistema_venda/cron/logs/lembretes.log
+
+# Logs de erro do PHP
+tail -f /var/log/php_errors.log
+```
+
+## 🔧 Manutenção e Troubleshooting
+
+### Problemas Comuns
+
+#### Conexão com Banco Falhou
+```bash
+# Verificar se o banco existe
+mysql -u root -p -e "SHOW DATABASES LIKE 'sistema_vendas'"
+
+# Testar conexão manualmente
+mysql -u root -p sistema_vendas
+
+# Verificar se o MySQL está rodando
+sudo systemctl status mysql
+```
+
+#### Login Não Funciona
+```bash
+# Verificar tabela usuarios
+mysql -u root -p sistema_vendas -e "SELECT * FROM usuarios;"
+
+# Limpar sessões PHP
+sudo rm -rf /var/lib/php/sessions/*
+```
+
+#### Gráficos Não Aparecem
+1. Verificar conexão com internet (CDN Chart.js)
+2. Console do navegador (F12) para erros JavaScript
+3. Verificar se há dados no dashboard
+4. Limpar cache do navegador
+
+#### Permissões Negadas
+```bash
+# Configurar permissões corretas
+sudo chmod 755 sistema_venda/public/
+sudo chmod 755 sistema_venda/public/assets/
+sudo chmod 755 -R sistema_venda/cron/logs/
+sudo chown www-data:www-data sistema_venda/ -R
+```
+
+#### Erro 500 - Internal Server Error
+```bash
+# Verificar log de erro do Apache/Nginx
+tail -f /var/log/apache2/error.log
+
+# Verificar log de erro do PHP
+tail -f /var/log/php_errors.log
+```
+
+### Debug Mode
+Para habilitar debug temporariamente:
+```php
+// No início do arquivo config/config.php
+define('APP_ENVIRONMENT', 'development');
+```
+
+## 📁 Estrutura de Banco de Dados
 
 ### Tabelas Principais
-- **`clientes`** - Dados dos compradores
-- **`vendas`** - Cabe�alho dos pedidos
-- **`itens_venda`** - Produtos das vendas
-- **`financeiro_parcelas`** - Parcelas geradas
-- **`financeiro_movimentacoes`** - Pagamentos efetivos
-- **`usuarios`** - Usu�rios do sistema
-- **`configuracoes`** - Configura��es gerais
 
-### Conven��es
-- Chaves prim�rias: `id_nomedatabela`
-- Campos de data: `data_criacao`, `data_atualizacao`
-- Campos monet�rios: `DECIMAL(10,2)`
-- �ndices para performance em consultas frequentes
+#### `vendas`
+- id_venda, id_cliente, id_usuario
+- data_venda, valor_total, valor_pago, saldo_devedor
+- quantidade_parcelas, status_geral, observacoes_pagamento
 
-## Fluxo de Trabalho
+#### `itens_venda`
+- id_item, id_venda, codigo_produto, descricao
+- quantidade, valor_unitario, valor_total
+- status_pagamento, valor_pago, saldo_item
 
-### 1. Criar Venda
-1. Acessar "Nova Venda"
-2. Selecionar cliente (existente ou novo)
-3. Adicionar itens dinamicamente
-4. Configurar parcelamento
-5. Gerar parcelas automaticamente
+#### `financeiro_parcelas`
+- id_parcela, id_venda, id_item, numero_parcela
+- valor_previsto, valor_efetivo, data_vencimento, data_pagamento
+- status, saldo_parcela, lembrete_enviado
 
-### 2. Gerenciar Pagamentos
-1. Acessar detalhes da venda
-2. Clicar em "Registrar Pagamento"
-3. Escolher tipo: Total, Parcela ou Item
-4. Informar valor (pode ser editado)
-5. Sistema recalcula saldos automaticamente
+#### `financeiro_movimentacoes`
+- id_movimentacao, id_venda, id_parcela, id_item
+- valor_pago, forma_pagamento, data_pagamento, observacoes
 
-### 3. Acompanhar Financeiro
-1. Dashboard mostra KPIs em tempo real
-2. Relatórios detalhados por período
-3. Alertas de vencimentos pr�ximos
-4. Exporta��o para an�lise externa
+#### `clientes`
+- id_cliente, nome, email, telefone, endereco
+- cpf_cnpj, data_criacao, ativo, observacoes
 
-## ?Valida��es e Seguran�a
+#### `usuarios`
+- id_usuario, nome, email, senha, ativo, data_criacao
 
-### Valida��es Implementadas
-- **CPF/CNPJ**: Algoritmos oficiais de valida��o
-- **Email**: Formato v�lido e dom�nio verific�vel
-- **Telefone**: Formato brasileiro com DDD
-- **Valores**: Positivos e dentro de limites
-- **Campos obrigat�rios**: Verifica��o completa
+#### `configuracoes`
+- id, chave, valor, criado_em, atualizado_em
 
-### Seguran�a
-- **SQL Injection**: Prepared statements
-- **XSS**: Escapamento de sa�da HTML
-- **CSRF**: Tokens em formul�rios
-- **Sess�o**: Configura��es seguras
-- **Senhas**: Hash com password_hash()
+## 🤝 Contribuição
 
-## Relatórios Dispon�veis
+### Como Contribuir
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-funcionalidade`)
+3. Commit suas mudanças (`git commit -am 'Adiciona nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/nova-funcionalidade`)
+5. Abra um Pull Request
 
-### Fluxo de Caixa
-- Movimentações por dia
-- Total recebido no período
-- Média diária de recebimentos
-- Gráfico de barras interativo
+### Padrões de Código
+- **PHP**: PSR-12
+- **Indentação**: 4 espaços
+- **Comentários**: PHPDoc para classes e métodos
+- **Nomenclatura**: camelCase para variáveis, PascalCase para classes
 
-### Desempenho de Vendas
-- Vendas por cliente
-- Taxa de recebimento
-- Valores pendentes
-- Comparativo total vs pago
+## 📄 Licença
 
-### Pendências
-- Vendas com saldo devedor
-- Parcelas vencidas
-- Clientes inadimplentes
-- Valores totais em aberto
+Este projeto está licenciado sob a **MIT License**.
 
-## Suporte
+```
+MIT License
 
-### Contato
-- Desenvolvedor: Jéssica Batista
-- Linkedin: https://www.linkedin.com/in/jessicaabatista/
+Copyright (c) 2024 Sistema de Controle de Vendas
 
-## Licença
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-Este projeto está licenciado sob a MIT License - veja o arquivo LICENSE para detalhes.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
 
 ---
 
+## 📞 Suporte
+
+Para suporte técnico ou dúvidas:
+- 📧 Email: contato@empresa.com
+- 📱 Telefone: (11) 9999-9999
+- 🌐 Website: https://www.empresa.com
+- 🐛 Issues: [GitHub Issues](https://github.com/usuario/sistema_venda/issues)
+
+**Desenvolvido com ❤️ pela equipe de desenvolvimento**

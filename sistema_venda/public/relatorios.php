@@ -1,11 +1,13 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
+require_once '../config/config.php';
 require_once '../config/auth.php';
-require_once '../classes/Relatorio.php';
+require_once CLASSES_PATH . '/Database.php';
+require_once CLASSES_PATH . '/Relatorio.php';
 
 $relatorio = new Relatorio();
 
-// Par?metros padr?o
+// Parametros padrao
 $dataInicio = $_GET['data_inicio'] ?? date('Y-m-01');
 $dataFim = $_GET['data_fim'] ?? date('Y-m-d');
 $tipoRelatorio = $_GET['tipo'] ?? 'fluxo_caixa';
@@ -22,12 +24,14 @@ if ($tipoRelatorio === 'fluxo_caixa') {
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relat?rios - Sistema de Semi-Joias</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Relatorios - <?php echo htmlspecialchars(APP_NAME); ?></title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="<?php echo getAssetUrl('css/style.css'); ?>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         .relatorios-container {
@@ -155,11 +159,6 @@ if ($tipoRelatorio === 'fluxo_caixa') {
             margin-top: 30px;
         }
 
-        .exportar-opcoes {
-            display: flex;
-            gap: 10px;
-        }
-
         .btn-exportar {
             padding: 10px 20px;
             background: #28a745;
@@ -170,7 +169,9 @@ if ($tipoRelatorio === 'fluxo_caixa') {
             transition: all 0.3s;
             font-weight: 500;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-exportar:hover {
@@ -197,332 +198,345 @@ if ($tipoRelatorio === 'fluxo_caixa') {
         }
     </style>
 </head>
+
 <body>
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <h2>Semi-Joias</h2>
-        </div>
-        <div class="navbar-menu">
-            <a href="dashboard.php" class="nav-link">Dashboard</a>
-            <a href="vendas.php" class="nav-link">Vendas</a>
-            <a href="nova_venda.php" class="nav-link">+ Nova Venda</a>
-            <a href="clientes.php" class="nav-link">Clientes</a>
-            <a href="relatorios.php" class="nav-link active">Relat?rios</a>
-            <div class="nav-user">
-                <a href="logout.php" class="nav-logout">Sair</a>
-            </div>
-        </div>
-    </nav>
+    <?php include 'includes/navbar.php'; ?>
 
     <div class="container">
-        <h1 style="margin-bottom: 30px;">Relatórios</h1>
+        <h1 style="margin-bottom: 30px;">Relatorios</h1>
 
         <!-- Filtros -->
         <div class="filtros-relatorio">
             <div class="tab-buttons">
-                <button class="tab-button <?php echo $tipoRelatorio === 'fluxo_caixa' ? 'active' : ''; ?>" 
-                        onclick="mudarRelatorio('fluxo_caixa')">
+                <button class="tab-button <?php echo $tipoRelatorio === 'fluxo_caixa' ? 'active' : ''; ?>"
+                    onclick="mudarRelatorio('fluxo_caixa')">
                     <i class="fas fa-chart-line"></i> Fluxo de Caixa
                 </button>
-                <button class="tab-button <?php echo $tipoRelatorio === 'desempenho_vendas' ? 'active' : ''; ?>" 
-                        onclick="mudarRelatorio('desempenho_vendas')">
+                <button class="tab-button <?php echo $tipoRelatorio === 'desempenho_vendas' ? 'active' : ''; ?>"
+                    onclick="mudarRelatorio('desempenho_vendas')">
                     <i class="fas fa-chart-bar"></i> Desempenho de Vendas
                 </button>
-                <button class="tab-button <?php echo $tipoRelatorio === 'pendencias' ? 'active' : ''; ?>" 
-                        onclick="mudarRelatorio('pendencias')">
-                    <i class="fas fa-exclamation-triangle"></i> Pendências
+                <button class="tab-button <?php echo $tipoRelatorio === 'pendencias' ? 'active' : ''; ?>"
+                    onclick="mudarRelatorio('pendencias')">
+                    <i class="fas fa-exclamation-triangle"></i> Pendencias
                 </button>
             </div>
 
             <form method="GET" id="formFiltros" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-                <input type="hidden" name="tipo" id="tipoRelatorio" value="<?php echo $tipoRelatorio; ?>">
+                <input type="hidden" name="tipo" id="tipoRelatorio" value="<?php echo htmlspecialchars($tipoRelatorio); ?>">
 
                 <div class="form-group" style="margin-bottom: 0;">
-                    <label>Data Início</label>
-                    <input type="date" name="data_inicio" value="<?php echo $dataInicio; ?>">
+                    <label>Data Inicio</label>
+                    <input type="date" name="data_inicio" value="<?php echo htmlspecialchars($dataInicio); ?>">
                 </div>
 
                 <div class="form-group" style="margin-bottom: 0;">
                     <label>Data Fim</label>
-                    <input type="date" name="data_fim" value="<?php echo $dataFim; ?>">
+                    <input type="date" name="data_fim" value="<?php echo htmlspecialchars($dataFim); ?>">
                 </div>
 
                 <div style="display: flex; gap: 10px; align-items: flex-end;">
-                    <button type="submit" class="btn btn-primary">Gerar Relatório</button>
-                    <a href="relatorios.php" class="btn btn-secondary">Limpar</a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Gerar Relatorio
+                    </button>
+                    <a href="relatorios.php" class="btn btn-secondary">
+                        <i class="fas fa-redo"></i> Limpar
+                    </a>
                 </div>
             </form>
         </div>
 
-        <!-- Relat?rio Fluxo de Caixa -->
+        <!-- Relatorio Fluxo de Caixa -->
         <?php if ($tipoRelatorio === 'fluxo_caixa'): ?>
-        <div class="relatorio-card">
-            <h2>Fluxo de Caixa (<?php echo date('d/m/Y', strtotime($dataInicio)); ?> a <?php echo date('d/m/Y', strtotime($dataFim)); ?>)</h2>
+            <div class="relatorio-card">
+                <h2>Fluxo de Caixa (<?php echo date('d/m/Y', strtotime($dataInicio)); ?> a <?php echo date('d/m/Y', strtotime($dataFim)); ?>)</h2>
 
-            <div class="relatorio-actions">
-                <button onclick="exportarCSV('fluxo_caixa', '<?php echo $dataInicio; ?>', '<?php echo $dataFim; ?>')" class="btn btn-exportar"><i class="fas fa-file-csv"></i> Exportar CSV</button>
-                <button onclick="exportarPDF('fluxo_caixa', '<?php echo $dataInicio; ?>', '<?php echo $dataFim; ?>')" class="btn btn-exportar"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
-                <button onclick="imprimirRelatorio()" class="btn btn-exportar"><i class="fas fa-print"></i> Imprimir</button>
-            </div>
-
-            <?php if (!empty($dados)): ?>
-                <?php
-                $totalPago = array_sum(array_column($dados, 'valor_pago'));
-                $totalMovimentacoes = array_sum(array_column($dados, 'qtd_movimentacoes'));
-                $mediaDiaria = count($dados) > 0 ? $totalPago / count($dados) : 0;
-                ?>
-
-                <div class="relatorio-stats">
-                    <div class="stat-box">
-                        <h4>Total Movimentado</h4>
-                        <p class="valor">R$ <?php echo number_format($totalPago, 2, ',', '.'); ?></p>
-                    </div>
-                    <div class="stat-box">
-                        <h4>M?dia Di?ria</h4>
-                        <p class="valor">R$ <?php echo number_format($mediaDiaria, 2, ',', '.'); ?></p>
-                    </div>
-                    <div class="stat-box">
-                        <h4>Total de Movimenta??es</h4>
-                        <p class="valor"><?php echo $totalMovimentacoes; ?></p>
-                    </div>
-                    <div class="stat-box">
-                        <h4>Dias com Movimento</h4>
-                        <p class="valor"><?php echo count($dados); ?></p>
-                    </div>
+                <div class="relatorio-actions">
+                    <button onclick="exportarCSV('fluxo_caixa', '<?php echo htmlspecialchars($dataInicio); ?>', '<?php echo htmlspecialchars($dataFim); ?>')" class="btn-exportar">
+                        <i class="fas fa-file-csv"></i> Exportar CSV
+                    </button>
+                    <button onclick="exportarPDF('fluxo_caixa', '<?php echo htmlspecialchars($dataInicio); ?>', '<?php echo htmlspecialchars($dataFim); ?>')" class="btn-exportar">
+                        <i class="fas fa-file-pdf"></i> Exportar PDF
+                    </button>
+                    <button onclick="imprimirRelatorio()" class="btn-exportar" style="background: #0069d9;">
+                        <i class="fas fa-print"></i> Imprimir
+                    </button>
                 </div>
 
-                <div class="grafico-container">
-                    <canvas id="graficoFluxo"></canvas>
-                </div>
+                <?php if (!empty($dados)): ?>
+                    <?php
+                    $totalPago = array_sum(array_column($dados, 'valor_pago'));
+                    $totalMovimentacoes = array_sum(array_column($dados, 'qtd_movimentacoes'));
+                    $mediaDiaria = count($dados) > 0 ? $totalPago / count($dados) : 0;
+                    ?>
 
-                <table class="tabela-relatorio">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Movimenta??es</th>
-                            <th>Valor Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($dados as $linha): ?>
-                        <tr>
-                            <td><?php echo date('d/m/Y', strtotime($linha['data'])); ?></td>
-                            <td><?php echo $linha['qtd_movimentacoes']; ?></td>
-                            <td>R$ <?php echo number_format($linha['valor_pago'], 2, ',', '.'); ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-
-                <script>
-                    const ctxFluxo = document.getElementById('graficoFluxo').getContext('2d');
-                    const fluxoDados = <?php echo json_encode($dados); ?>;
-
-                    new Chart(ctxFluxo, {
-                        type: 'bar',
-                        data: {
-                            labels: fluxoDados.map(d => new Date(d.data).toLocaleDateString('pt-BR')),
-                            datasets: [{
-                                label: 'Valor Movimentado (R$)',
-                                data: fluxoDados.map(d => d.valor_pago),
-                                backgroundColor: '#667eea',
-                                borderColor: '#764ba2',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        callback: function(value) {
-                                            return 'R$ ' + value.toFixed(2);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    });
-                </script>
-            <?php else: ?>
-                <p style="text-align: center; color: #999; padding: 40px;">Nenhum dado encontrado para o per?odo selecionado</p>
-            <?php endif; ?>
-        </div>
-
-        <!-- Relat?rio Desempenho de Vendas -->
-        <?php elseif ($tipoRelatorio === 'desempenho_vendas'): ?>
-        <div class="relatorio-card">
-            <h2>Desempenho de Vendas (<?php echo date('d/m/Y', strtotime($dataInicio)); ?> a <?php echo date('d/m/Y', strtotime($dataFim)); ?>)</h2>
-
-            <div class="relatorio-actions">
-                <button onclick="exportarCSV('desempenho_vendas', '<?php echo $dataInicio; ?>', '<?php echo $dataFim; ?>')" class="btn btn-exportar"><i class="fas fa-file-csv"></i> Exportar CSV</button>
-                <button onclick="exportarPDF('desempenho_vendas', '<?php echo $dataInicio; ?>', '<?php echo $dataFim; ?>')" class="btn btn-exportar"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
-                <button onclick="imprimirRelatorio()" class="btn btn-exportar"><i class="fas fa-print"></i> Imprimir</button>
-            </div>
-
-            <?php if (!empty($dados)): ?>
-                <?php
-                $totalVendas = array_sum(array_column($dados, 'valor_total'));
-                $totalPago = array_sum(array_column($dados, 'valor_pago'));
-                $totalPendente = $totalVendas - $totalPago;
-                ?>
-
-                <div class="relatorio-stats">
-                    <div class="stat-box">
-                        <h4>Total em Vendas</h4>
-                        <p class="valor">R$ <?php echo number_format($totalVendas, 2, ',', '.'); ?></p>
+                    <div class="relatorio-stats">
+                        <div class="stat-box">
+                            <h4>Total Movimentado</h4>
+                            <p class="valor">R$ <?php echo number_format($totalPago, 2, ',', '.'); ?></p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>Media Diaria</h4>
+                            <p class="valor">R$ <?php echo number_format($mediaDiaria, 2, ',', '.'); ?></p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>Total de Movimentacoes</h4>
+                            <p class="valor"><?php echo $totalMovimentacoes; ?></p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>Dias com Movimento</h4>
+                            <p class="valor"><?php echo count($dados); ?></p>
+                        </div>
                     </div>
-                    <div class="stat-box">
-                        <h4>Total Recebido</h4>
-                        <p class="valor">R$ <?php echo number_format($totalPago, 2, ',', '.'); ?></p>
+
+                    <div class="grafico-container">
+                        <canvas id="graficoFluxo"></canvas>
                     </div>
-                    <div class="stat-box">
-                        <h4>Total Pendente</h4>
-                        <p class="valor">R$ <?php echo number_format($totalPendente, 2, ',', '.'); ?></p>
-                    </div>
-                    <div class="stat-box">
-                        <h4>?ndice de Recebimento</h4>
-                        <p class="valor"><?php echo $totalVendas > 0 ? round(($totalPago / $totalVendas) * 100, 1) : 0; ?>%</p>
-                    </div>
-                </div>
 
-                <div class="grafico-container">
-                    <canvas id="graficoDesempenho"></canvas>
-                </div>
+                    <table class="tabela-relatorio">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Movimentacoes</th>
+                                <th>Valor Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($dados as $linha): ?>
+                                <tr>
+                                    <td><?php echo date('d/m/Y', strtotime($linha['data'])); ?></td>
+                                    <td><?php echo intval($linha['qtd_movimentacoes']); ?></td>
+                                    <td>R$ <?php echo number_format(floatval($linha['valor_pago']), 2, ',', '.'); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
 
-                <table class="tabela-relatorio">
-                    <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Vendas</th>
-                            <th>Valor Total</th>
-                            <th>Valor Pago</th>
-                            <th>Pendente</th>
-                            <th>Taxa de Recebimento</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($dados as $linha): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($linha['nome']); ?></td>
-                            <td><?php echo $linha['total_vendas']; ?></td>
-                            <td>R$ <?php echo number_format($linha['valor_total'], 2, ',', '.'); ?></td>
-                            <td>R$ <?php echo number_format($linha['valor_pago'], 2, ',', '.'); ?></td>
-                            <td>R$ <?php echo number_format($linha['valor_total'] - $linha['valor_pago'], 2, ',', '.'); ?></td>
-                            <td><?php echo $linha['valor_total'] > 0 ? round(($linha['valor_pago'] / $linha['valor_total']) * 100, 1) : 0; ?>%</td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                    <script>
+                        const ctxFluxo = document.getElementById('graficoFluxo').getContext('2d');
+                        const fluxoDados = <?php echo json_encode($dados); ?>;
 
-                <script>
-                    const ctxDesempenho = document.getElementById('graficoDesempenho').getContext('2d');
-                    const desempenhoDados = <?php echo json_encode($dados); ?>;
-
-                    new Chart(ctxDesempenho, {
-                        type: 'bar',
-                        data: {
-                            labels: desempenhoDados.map(d => d.nome),
-                            datasets: [
-                                {
-                                    label: 'Total de Vendas',
-                                    data: desempenhoDados.map(d => d.valor_total),
+                        new Chart(ctxFluxo, {
+                            type: 'bar',
+                            data: {
+                                labels: fluxoDados.map(d => new Date(d.data).toLocaleDateString('pt-BR')),
+                                datasets: [{
+                                    label: 'Valor Movimentado (R$)',
+                                    data: fluxoDados.map(d => parseFloat(d.valor_pago)),
                                     backgroundColor: '#667eea',
                                     borderColor: '#764ba2',
                                     borderWidth: 1
-                                },
-                                {
-                                    label: 'Total Pago',
-                                    data: desempenhoDados.map(d => d.valor_pago),
-                                    backgroundColor: '#6bcf7f',
-                                    borderColor: '#4db85b',
-                                    borderWidth: 1
-                                }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        callback: function(value) {
-                                            return 'R$ ' + value.toFixed(2);
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: {
+                                            callback: function(value) {
+                                                return 'R$ ' + value.toFixed(2);
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
-                    });
-                </script>
-            <?php else: ?>
-                <p style="text-align: center; color: #999; padding: 40px;">Nenhum dado encontrado para o per?odo selecionado</p>
-            <?php endif; ?>
-        </div>
-
-        <!-- Relat?rio Pend?ncias -->
-        <?php elseif ($tipoRelatorio === 'pendencias'): ?>
-        <div class="relatorio-card">
-            <h2>Pend?ncias de Recebimento</h2>
-
-            <div class="relatorio-actions">
-                <button onclick="exportarCSV('pendencias')" class="btn btn-exportar"><i class="fas fa-file-csv"></i> Exportar CSV</button>
-                <button onclick="exportarPDF('pendencias')" class="btn btn-exportar"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
-                <button onclick="imprimirRelatorio()" class="btn btn-exportar"><i class="fas fa-print"></i> Imprimir</button>
+                        });
+                    </script>
+                <?php else: ?>
+                    <p style="text-align: center; color: #999; padding: 40px;">Nenhum dado encontrado para o periodo selecionado</p>
+                <?php endif; ?>
             </div>
 
-            <?php if (!empty($dados)): ?>
-                <?php $totalPendente = array_sum(array_column($dados, 'saldo_total')); ?>
+        <!-- Relatorio Desempenho de Vendas -->
+        <?php elseif ($tipoRelatorio === 'desempenho_vendas'): ?>
+            <div class="relatorio-card">
+                <h2>Desempenho de Vendas (<?php echo date('d/m/Y', strtotime($dataInicio)); ?> a <?php echo date('d/m/Y', strtotime($dataFim)); ?>)</h2>
 
-                <div class="relatorio-stats">
-                    <div class="stat-box">
-                        <h4>Total em Pend?ncia</h4>
-                        <p class="valor">R$ <?php echo number_format($totalPendente, 2, ',', '.'); ?></p>
-                    </div>
-                    <div class="stat-box">
-                        <h4>Total de Vendas Pendentes</h4>
-                        <p class="valor"><?php echo count($dados); ?></p>
-                    </div>
-                    <div class="stat-box">
-                        <h4>M?dia por Venda</h4>
-                        <p class="valor">R$ <?php echo count($dados) > 0 ? number_format($totalPendente / count($dados), 2, ',', '.') : '0,00'; ?></p>
-                    </div>
+                <div class="relatorio-actions">
+                    <button onclick="exportarCSV('desempenho_vendas', '<?php echo htmlspecialchars($dataInicio); ?>', '<?php echo htmlspecialchars($dataFim); ?>')" class="btn-exportar">
+                        <i class="fas fa-file-csv"></i> Exportar CSV
+                    </button>
+                    <button onclick="exportarPDF('desempenho_vendas', '<?php echo htmlspecialchars($dataInicio); ?>', '<?php echo htmlspecialchars($dataFim); ?>')" class="btn-exportar">
+                        <i class="fas fa-file-pdf"></i> Exportar PDF
+                    </button>
+                    <button onclick="imprimirRelatorio()" class="btn-exportar" style="background: #0069d9;">
+                        <i class="fas fa-print"></i> Imprimir
+                    </button>
                 </div>
 
-                <table class="tabela-relatorio">
-                    <thead>
-                        <tr>
-                            <th>ID Venda</th>
-                            <th>Cliente</th>
-                            <th>Data da Venda</th>
-                            <th>Saldo Pendente</th>
-                            <th>A??o</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($dados as $linha): ?>
-                        <tr>
-                            <td>#<?php echo $linha['id_venda']; ?></td>
-                            <td><?php echo htmlspecialchars($linha['nome']); ?></td>
-                            <td><?php echo date('d/m/Y', strtotime($linha['data_venda'])); ?></td>
-                            <td>R$ <?php echo number_format($linha['saldo_total'], 2, ',', '.'); ?></td>
-                            <td>
-                                <a href="detalhes_venda.php?id=<?php echo $linha['id_venda']; ?>" class="btn-link">Ver Venda</a>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php else: ?>
-                <p style="text-align: center; color: #999; padding: 40px;"><i class="fas fa-check-circle"></i> Nenhuma pend?ncia encontrada</p>
-            <?php endif; ?>
-        </div>
+                <?php if (!empty($dados)): ?>
+                    <?php
+                    $totalVendas = array_sum(array_column($dados, 'valor_total'));
+                    $totalPago = array_sum(array_column($dados, 'valor_pago'));
+                    $totalPendente = $totalVendas - $totalPago;
+                    ?>
+
+                    <div class="relatorio-stats">
+                        <div class="stat-box">
+                            <h4>Total em Vendas</h4>
+                            <p class="valor">R$ <?php echo number_format($totalVendas, 2, ',', '.'); ?></p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>Total Recebido</h4>
+                            <p class="valor">R$ <?php echo number_format($totalPago, 2, ',', '.'); ?></p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>Total Pendente</h4>
+                            <p class="valor">R$ <?php echo number_format($totalPendente, 2, ',', '.'); ?></p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>Indice de Recebimento</h4>
+                            <p class="valor"><?php echo $totalVendas > 0 ? round(($totalPago / $totalVendas) * 100, 1) : 0; ?>%</p>
+                        </div>
+                    </div>
+
+                    <div class="grafico-container">
+                        <canvas id="graficoDesempenho"></canvas>
+                    </div>
+
+                    <table class="tabela-relatorio">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Vendas</th>
+                                <th>Valor Total</th>
+                                <th>Valor Pago</th>
+                                <th>Pendente</th>
+                                <th>Taxa de Recebimento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($dados as $linha): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($linha['nome']); ?></td>
+                                    <td><?php echo intval($linha['total_vendas']); ?></td>
+                                    <td>R$ <?php echo number_format(floatval($linha['valor_total']), 2, ',', '.'); ?></td>
+                                    <td>R$ <?php echo number_format(floatval($linha['valor_pago']), 2, ',', '.'); ?></td>
+                                    <td>R$ <?php echo number_format(floatval($linha['valor_total']) - floatval($linha['valor_pago']), 2, ',', '.'); ?></td>
+                                    <td><?php echo floatval($linha['valor_total']) > 0 ? round((floatval($linha['valor_pago']) / floatval($linha['valor_total'])) * 100, 1) : 0; ?>%</td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+                    <script>
+                        const ctxDesempenho = document.getElementById('graficoDesempenho').getContext('2d');
+                        const desempenhoDados = <?php echo json_encode($dados); ?>;
+
+                        new Chart(ctxDesempenho, {
+                            type: 'bar',
+                            data: {
+                                labels: desempenhoDados.map(d => d.nome),
+                                datasets: [{
+                                        label: 'Total de Vendas',
+                                        data: desempenhoDados.map(d => parseFloat(d.valor_total)),
+                                        backgroundColor: '#667eea',
+                                        borderColor: '#764ba2',
+                                        borderWidth: 1
+                                    },
+                                    {
+                                        label: 'Total Pago',
+                                        data: desempenhoDados.map(d => parseFloat(d.valor_pago)),
+                                        backgroundColor: '#6bcf7f',
+                                        borderColor: '#4db85b',
+                                        borderWidth: 1
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: {
+                                            callback: function(value) {
+                                                return 'R$ ' + value.toFixed(2);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+                <?php else: ?>
+                    <p style="text-align: center; color: #999; padding: 40px;">Nenhum dado encontrado para o periodo selecionado</p>
+                <?php endif; ?>
+            </div>
+
+        <!-- Relatorio Pendencias -->
+        <?php elseif ($tipoRelatorio === 'pendencias'): ?>
+            <div class="relatorio-card">
+                <h2>Pendencias de Recebimento</h2>
+
+                <div class="relatorio-actions">
+                    <button onclick="exportarCSV('pendencias')" class="btn-exportar">
+                        <i class="fas fa-file-csv"></i> Exportar CSV
+                    </button>
+                    <button onclick="exportarPDF('pendencias')" class="btn-exportar">
+                        <i class="fas fa-file-pdf"></i> Exportar PDF
+                    </button>
+                    <button onclick="imprimirRelatorio()" class="btn-exportar" style="background: #0069d9;">
+                        <i class="fas fa-print"></i> Imprimir
+                    </button>
+                </div>
+
+                <?php if (!empty($dados)): ?>
+                    <?php $totalPendente = array_sum(array_column($dados, 'saldo_total')); ?>
+
+                    <div class="relatorio-stats">
+                        <div class="stat-box">
+                            <h4>Total em Pendencia</h4>
+                            <p class="valor">R$ <?php echo number_format($totalPendente, 2, ',', '.'); ?></p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>Total de Vendas Pendentes</h4>
+                            <p class="valor"><?php echo count($dados); ?></p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>Media por Venda</h4>
+                            <p class="valor">R$ <?php echo count($dados) > 0 ? number_format($totalPendente / count($dados), 2, ',', '.') : '0,00'; ?></p>
+                        </div>
+                    </div>
+
+                    <table class="tabela-relatorio">
+                        <thead>
+                            <tr>
+                                <th>ID Venda</th>
+                                <th>Cliente</th>
+                                <th>Data da Venda</th>
+                                <th>Saldo Pendente</th>
+                                <th>Acao</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($dados as $linha): ?>
+                                <tr>
+                                    <td>#<?php echo intval($linha['id_venda']); ?></td>
+                                    <td><?php echo htmlspecialchars($linha['nome']); ?></td>
+                                    <td><?php echo date('d/m/Y', strtotime($linha['data_venda'])); ?></td>
+                                    <td>R$ <?php echo number_format(floatval($linha['saldo_total']), 2, ',', '.'); ?></td>
+                                    <td>
+                                        <a href="detalhes_venda.php?id=<?php echo intval($linha['id_venda']); ?>" class="btn-link">
+                                            <i class="fas fa-eye"></i> Ver
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <p style="text-align: center; color: #999; padding: 40px;">
+                        <i class="fas fa-check-circle"></i> Nenhuma pendencia encontrada
+                    </p>
+                <?php endif; ?>
+            </div>
         <?php endif; ?>
     </div>
 
+    <script src="<?php echo getAssetUrl('js/app.js'); ?>"></script>
     <script>
         function mudarRelatorio(tipo) {
             document.getElementById('tipoRelatorio').value = tipo;
@@ -530,16 +544,16 @@ if ($tipoRelatorio === 'fluxo_caixa') {
         }
 
         function exportarCSV(tipo, dataInicio = '', dataFim = '') {
-            let url = 'api/relatorios/exportar.php?tipo=' + tipo + '&formato=csv';
-            if (dataInicio) url += '&data_inicio=' + dataInicio;
-            if (dataFim) url += '&data_fim=' + dataFim;
+            let url = '<?php echo API_URL_RELATIVE; ?>relatorios/exportar.php?tipo=' + tipo + '&formato=csv';
+            if (dataInicio) url += '&data_inicio=' + encodeURIComponent(dataInicio);
+            if (dataFim) url += '&data_fim=' + encodeURIComponent(dataFim);
             window.location.href = url;
         }
 
         function exportarPDF(tipo, dataInicio = '', dataFim = '') {
-            let url = 'api/relatorios/exportar.php?tipo=' + tipo + '&formato=pdf';
-            if (dataInicio) url += '&data_inicio=' + dataInicio;
-            if (dataFim) url += '&data_fim=' + dataFim;
+            let url = '<?php echo API_URL_RELATIVE; ?>relatorios/exportar.php?tipo=' + tipo + '&formato=pdf';
+            if (dataInicio) url += '&data_inicio=' + encodeURIComponent(dataInicio);
+            if (dataFim) url += '&data_fim=' + encodeURIComponent(dataFim);
             window.location.href = url;
         }
 
@@ -549,7 +563,9 @@ if ($tipoRelatorio === 'fluxo_caixa') {
     </script>
 
     <style media="print">
-        .navbar, .relatorio-actions, .filtros-relatorio {
+        .navbar,
+        .relatorio-actions,
+        .filtros-relatorio {
             display: none !important;
         }
 
@@ -564,4 +580,5 @@ if ($tipoRelatorio === 'fluxo_caixa') {
         }
     </style>
 </body>
+
 </html>

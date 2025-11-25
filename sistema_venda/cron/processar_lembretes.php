@@ -14,7 +14,7 @@ $cliente_obj = new Cliente();
 
 // Buscar parcelas que vencem nos próximos 5 dias
 $query = "SELECT p.*, v.id_cliente, c.nome, c.email
-         FROM parcelas p
+         FROM financeiro_parcelas p
          JOIN vendas v ON p.id_venda = v.id_venda
          JOIN clientes c ON v.id_cliente = c.id_cliente
          WHERE p.status != 'paga'
@@ -36,7 +36,7 @@ foreach ($parcelas as $parcela) {
 
     if ($sucesso) {
         // Marcar como enviado
-        $updateQuery = "UPDATE parcelas SET lembrete_enviado = 1 WHERE id_parcela = ?";
+        $updateQuery = "UPDATE financeiro_parcelas SET lembrete_enviado = 1 WHERE id_parcela = ?";
         $db->execute($updateQuery, 'i', [$parcela['id_parcela']]);
     }
 }

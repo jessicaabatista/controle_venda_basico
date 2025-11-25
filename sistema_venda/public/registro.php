@@ -2,6 +2,7 @@
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_once '../config/config.php';
     require_once '../classes/Database.php';
     require_once '../classes/Usuario.php';
 
@@ -9,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $resultado = $usuario->criar($_POST['nome'], $_POST['email'], $_POST['senha']);
 
     if ($resultado['sucesso']) {
-        $sucesso = 'Usuário criado com sucesso! Faça login para continuar.';
+        $sucesso = 'Usuario criado com sucesso! Faca login para continuar.';
     } else {
         $erro = $resultado['mensagem'];
     }
@@ -25,146 +26,188 @@ if (isset($_SESSION['id_usuario'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro - Sistema de Semi-Joias</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Registro - Sistema de Gestao</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .login-box {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        .login-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
+            padding: 50px;
         }
 
-        .login-box h1 {
+        .login-header {
             text-align: center;
-            color: #333;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+        }
+
+        .login-header h1 {
             font-size: 28px;
+            color: #1c813c;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #999;
+            font-size: 14px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            color: #555;
+            margin-bottom: 10px;
+            color: #333;
             font-weight: 500;
+            font-size: 14px;
         }
 
         .form-group input {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+            border: 1px solid #f1f1f1;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+            border-color: #0094e1;
+            background-color: #fff;
         }
 
         .btn-login {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #1c813c;
             color: white;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
         }
 
         .btn-login:hover {
-            transform: translateY(-2px);
+            background-color: #156430;
         }
 
         .erro {
-            background: #f8d7da;
+            background-color: #f8d7da;
             color: #721c24;
-            padding: 12px;
-            border-radius: 5px;
+            padding: 12px 15px;
+            border-radius: 8px;
             margin-bottom: 20px;
-            border: 1px solid #f5c6cb;
+            border: 1px solid #f1f1f1;
+            border-left: 4px solid #dc3545;
+            font-size: 14px;
         }
 
         .sucesso {
-            background: #d4edda;
+            background-color: #d4edda;
             color: #155724;
-            padding: 12px;
-            border-radius: 5px;
+            padding: 12px 15px;
+            border-radius: 8px;
             margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
+            border: 1px solid #f1f1f1;
+            border-left: 4px solid #28a745;
+            font-size: 14px;
         }
 
-        .registro-link {
+        .login-footer {
             text-align: center;
-            margin-top: 20px;
             color: #666;
+            font-size: 14px;
         }
 
-        .registro-link a {
-            color: #667eea;
+        .login-footer a {
+            color: #0094e1;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 600;
         }
 
-        .registro-link a:hover {
+        .login-footer a:hover {
             text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+
+            .login-header h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <div class="login-box">
-            <h1>?? Registro</h1>
+        <div class="login-header">
+            <h1><i class="fas fa-chart-line"></i> Gestao</h1>
+            <p>Criar Conta</p>
+        </div>
 
-            <?php if (isset($sucesso)): ?>
-                <div class="sucesso"><?php echo htmlspecialchars($sucesso); ?></div>
-            <?php endif; ?>
-
-            <?php if (isset($erro)): ?>
-                <div class="erro"><?php echo htmlspecialchars($erro); ?></div>
-            <?php endif; ?>
-
-            <form method="POST">
-                <div class="form-group">
-                    <label for="nome">Nome Completo</label>
-                    <input type="text" id="nome" name="nome" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="senha">Senha</label>
-                    <input type="password" id="senha" name="senha" required minlength="6">
-                </div>
-
-                <button type="submit" class="btn-login">Registrar</button>
-            </form>
-
-            <div class="registro-link">
-                Já tem conta? <a href="login.php">Faça login aqui</a>
+        <?php if (isset($sucesso)): ?>
+            <div class="sucesso">
+                <i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($sucesso); ?>
             </div>
+        <?php endif; ?>
+
+        <?php if (isset($erro)): ?>
+            <div class="erro">
+                <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($erro); ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="nome">Nome Completo</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="senha" required minlength="6">
+            </div>
+
+            <button type="submit" class="btn-login">
+                <i class="fas fa-user-plus"></i> Registrar
+            </button>
+        </form>
+
+        <div class="login-footer">
+            Ja tem conta? <a href="login.php">Faca login aqui</a>
         </div>
     </div>
 </body>

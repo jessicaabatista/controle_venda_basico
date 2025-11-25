@@ -1,39 +1,33 @@
 <?php
+require_once '../config/config.php';
 require_once '../config/auth.php';
-require_once '../classes/Database.php';
-require_once '../classes/Cliente.php';
+require_once CLASSES_PATH . '/Database.php';
+require_once CLASSES_PATH . '/Cliente.php';
 
 $cliente_obj = new Cliente();
 $clientes = $cliente_obj->listar();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clientes - Sistema de Semi-Joias</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Clientes - <?php echo htmlspecialchars(APP_NAME); ?></title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>css/style.css">
 </head>
+
 <body>
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <h2>Semi-Joias</h2>
-        </div>
-        <div class="navbar-menu">
-            <a href="dashboard.php" class="nav-link">Dashboard</a>
-            <a href="vendas.php" class="nav-link">Vendas</a>
-            <a href="nova_venda.php" class="nav-link">+ Nova Venda</a>
-            <a href="clientes.php" class="nav-link active">Clientes</a>
-            <div class="nav-user">
-                <a href="logout.php" class="nav-logout">Sair</a>
-            </div>
-        </div>
-    </nav>
+    <?php include 'includes/navbar.php'; ?>
 
     <div class="container">
         <div class="list-header">
-            <h1>Gestão de Clientes</h1>
-            <button onclick="abrirModalNovoCliente()" class="btn btn-primary">+ Novo Cliente</button>
+            <h1><i class="fas fa-users"></i> Gestao de Clientes</h1>
+            <button onclick="abrirModalNovoCliente()" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Novo Cliente
+            </button>
         </div>
 
         <div class="card">
@@ -45,22 +39,22 @@ $clientes = $cliente_obj->listar();
                         <th>Telefone</th>
                         <th>Total de Vendas</th>
                         <th>Valor Total</th>
-                        <th>Ações</th>
+                        <th>Acoes</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($clientes as $cliente): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($cliente['nome']); ?></td>
-                        <td><?php echo htmlspecialchars($cliente['email']); ?></td>
-                        <td><?php echo htmlspecialchars($cliente['telefone']); ?></td>
-                        <td><?php echo $cliente['total_vendas'] ?? 0; ?></td>
-                        <td>R$ <?php echo number_format($cliente['total_gasto'] ?? 0, 2, ',', '.'); ?></td>
-                        <td>
-                            <a href="detalhes_cliente.php?id=<?php echo $cliente['id_cliente']; ?>" class="btn-link">Ver</a>
-                            <button onclick="abrirModalEditarCliente(<?php echo $cliente['id_cliente']; ?>)" class="btn-link">Editar</button>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td><?php echo htmlspecialchars($cliente['nome']); ?></td>
+                            <td><?php echo htmlspecialchars($cliente['email']); ?></td>
+                            <td><?php echo htmlspecialchars($cliente['telefone']); ?></td>
+                            <td><?php echo $cliente['total_vendas'] ?? 0; ?></td>
+                            <td><?php echo formatarMoeda($cliente['total_gasto'] ?? 0); ?></td>
+                            <td style="display: flex; gap: 5px;">
+                                <a href="<?php echo PUBLIC_URL; ?>detalhes_cliente.php?id=<?php echo $cliente['id_cliente']; ?>" class="btn-link"><i class="fas fa-eye"></i></a>
+                                <!-- <button onclick="abrirModalEditarCliente(<?php //echo $cliente['id_cliente']; ?>)" class="btn-link"><i class="fas fa-edit"></i></button> -->
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
@@ -71,8 +65,10 @@ $clientes = $cliente_obj->listar();
     <div id="modalCliente" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Novo Cliente</h2>
-                <span class="modal-close" onclick="fecharModalCliente()">&times;</span>
+                <h2><i class="fas fa-user-plus"></i> Novo Cliente</h2>
+                <button class="modal-close" onclick="fecharModalCliente()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
 
             <form id="formCliente" class="modal-body">
@@ -88,36 +84,48 @@ $clientes = $cliente_obj->listar();
 
                 <div class="form-group">
                     <label>Telefone</label>
-                    <input type="text" id="telefoneCliente">
+                    <input type="text" id="telefoneCliente" class="input-telefone" placeholder="(11) 9 9999-9999">
                 </div>
 
                 <div class="form-group">
-                    <label>Endereço</label>
+                    <label>Endereco</label>
                     <input type="text" id="enderecoCliente">
                 </div>
 
                 <div class="form-group">
                     <label>CPF/CNPJ</label>
-                    <input type="text" id="cpfCnpjCliente">
+                    <input type="text" id="cpfCnpjCliente" class="input-cpf-cnpj" placeholder="000.000.000-00">
                 </div>
 
                 <div class="form-group">
-                    <label>Observações</label>
+                    <label>Observacoes</label>
                     <textarea id="obsCliente" rows="3"></textarea>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                    <button type="button" class="btn btn-secondary" onclick="fecharModalCliente()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="fecharModalCliente()"><i class="fas fa-times"></i> Cancelar</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <script src="<?php echo ASSETS_URL; ?>js/mascaras.js"></script>
+    <script src="<?php echo ASSETS_URL; ?>js/validacoes.js"></script>
+    <script src="<?php echo ASSETS_URL; ?>js/app.js"></script>
+    
     <script>
+        function formatarMoeda(valor) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(valor);
+        }
+
         function abrirModalNovoCliente() {
             document.getElementById('modalCliente').classList.add('show');
             document.getElementById('formCliente').reset();
+            document.getElementById('nomeCliente').focus();
         }
 
         function fecharModalCliente() {
@@ -136,23 +144,30 @@ $clientes = $cliente_obj->listar();
                 observacoes: document.getElementById('obsCliente').value
             };
 
-            fetch('api/clientes/salvar.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dados)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.sucesso) {
-                    alert('Cliente salvo com sucesso!');
-                    location.reload();
-                } else {
-                    alert('Erro: ' + data.mensagem);
-                }
-            });
+            FeedbackVisual.mostrarLoading(this.querySelector('button[type="submit"]'));
+
+            fetch('<?php echo API_URL; ?>clientes/salvar.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dados)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.sucesso) {
+                        FeedbackVisual.mostrarNotificacao('sucesso', 'Cliente salvo com sucesso!');
+                        setTimeout(() => location.reload(), 1500);
+                    } else {
+                        FeedbackVisual.mostrarNotificacao('erro', data.mensagem || 'Erro ao salvar cliente');
+                    }
+                })
+                .catch(error => {
+                    FeedbackVisual.mostrarNotificacao('erro', 'Erro ao salvar cliente');
+                    console.error('Erro:', error);
+                });
         });
 
-        // Fechar modal ao clicar fora
         window.addEventListener('click', function(event) {
             const modal = document.getElementById('modalCliente');
             if (event.target === modal) {
@@ -161,4 +176,5 @@ $clientes = $cliente_obj->listar();
         });
     </script>
 </body>
+
 </html>

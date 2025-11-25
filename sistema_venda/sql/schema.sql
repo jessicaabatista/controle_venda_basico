@@ -90,13 +90,13 @@ CREATE TABLE configuracoes (
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Õndices para melhor performance
+-- √çndices para melhor performance
 CREATE INDEX idx_venda_cliente ON vendas(id_cliente);
 CREATE INDEX idx_venda_status ON vendas(status_geral);
 CREATE INDEX idx_parcela_vencimento ON financeiro_parcelas(data_vencimento);
 CREATE INDEX idx_parcela_status ON financeiro_parcelas(status);
 
--- Inserir configuraÁıes padr„o
+-- Inserir configura√ß√µes padr√£o
 INSERT IGNORE INTO configuracoes (chave, valor) VALUES
 ('nome_empresa', 'Minha Empresa'),
 ('email_empresa', ''),

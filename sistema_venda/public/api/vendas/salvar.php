@@ -1,200 +1,210 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
-require_once '../../config/auth.php';
-require_once '../../classes/Database.php';
-require_once '../../classes/Venda.php';
-require_once '../../classes/Financeiro.php';
 
-// Verificar m?todo HTTP
+// ✅ GARANTIR QUE CONFIG ESTÁ CARREGADO ANTES DE QUALQUER COISA
+if (!defined('DB_HOST')) {
+    require_once '../../../config/config.php';
+}
+
+// ✅ REQUERER AUTH PARA GARANTIR SESSÃO ATIVA
+require_once '../../../config/auth.php';
+
+// ✅ REQUERER CLASSES
+require_once CLASSES_PATH . '/Database.php';
+require_once CLASSES_PATH . '/Venda.php';
+
+// ✅ LOG DETALHADO INICIAL
+error_log('=== INICIAR: CRIAR VENDA ===');
+error_log('Hora: ' . date('Y-m-d H:i:s'));
+error_log('IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'DESCONHECIDO'));
+error_log('User-Agent: ' . ($_SERVER['HTTP_USER_AGENT'] ?? 'DESCONHECIDO'));
+
+// ✅ VALIDAR MÉTODO HTTP
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    error_log('ERRO: Método HTTP não é POST. Recebido: ' . $_SERVER['REQUEST_METHOD']);
     http_response_code(405);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'Método não permitido'
+        'mensagem' => 'Método não permitido. Use POST.',
+        'metodo_recebido' => $_SERVER['REQUEST_METHOD']
     ]);
     exit;
 }
 
-// Obter e validar dados de entrada
-$jsonInput = file_get_contents('php://input');
-if ($jsonInput === false) {
+// ✅ LER INPUT JSON
+$input = file_get_contents('php://input');
+error_log('Input bruto recebido: ' . strlen($input) . ' bytes');
+error_log('Conteúdo: ' . substr($input, 0, 500));
+
+if (empty($input)) {
+    error_log('ERRO: Input vazio');
     http_response_code(400);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'Erro ao ler dados da requisição'
+        'mensagem' => 'Nenhum dado foi enviado',
+        'debug' => 'Input PHP vazio'
     ]);
     exit;
 }
 
-$dados = json_decode($jsonInput, true);
+// ✅ DECODIFICAR JSON
+$dados = json_decode($input, true);
+error_log('JSON decoded: ' . json_encode($dados));
+
 if (json_last_error() !== JSON_ERROR_NONE) {
+    error_log('ERRO JSON: ' . json_last_error_msg());
     http_response_code(400);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'JSON inv?lido: ' . json_last_error_msg()
+        'mensagem' => 'JSON inválido',
+        'erro_json' => json_last_error_msg(),
+        'input_recebido' => $input
     ]);
     exit;
 }
 
-// Validar campos obrigat?rios
-$camposObrigatorios = ['id_cliente'];
-foreach ($camposObrigatorios as $campo) {
-    if (!isset($dados[$campo]) || $dados[$campo] === '') {
-        http_response_code(400);
-        echo json_encode([
-            'sucesso' => false,
-            'mensagem' => "Campo obrigat?rio ausente: $campo"
-        ]);
-        exit;
-    }
-}
-
-// Sanitizar e validar dados
-$idCliente = filter_var($dados['id_cliente'], FILTER_VALIDATE_INT);
-$quantidadeParcelas = isset($dados['quantidade_parcelas']) ? filter_var($dados['quantidade_parcelas'], FILTER_VALIDATE_INT) : 1;
-$observacoes = isset($dados['observacoes']) ? htmlspecialchars(trim($dados['observacoes']), ENT_QUOTES, 'UTF-8') : '';
-
-// Validar valores
-if ($idCliente === false || $idCliente <= 0) {
+// ✅ VALIDAR DADOS OBRIGATÓRIOS
+if (!is_array($dados)) {
+    error_log('ERRO: Dados não é um array após JSON decode');
     http_response_code(400);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'ID do cliente inv?lido'
+        'mensagem' => 'Dados devem ser um objeto JSON',
+        'tipo_recebido' => gettype($dados)
     ]);
     exit;
 }
 
-if ($quantidadeParcelas === false || $quantidadeParcelas < 1 || $quantidadeParcelas > 24) {
+// ✅ VALIDAR ID_CLIENTE
+if (empty($dados['id_cliente'])) {
+    error_log('ERRO: id_cliente vazio. Dados recebidos: ' . json_encode($dados));
     http_response_code(400);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'Quantidade de parcelas deve ser entre 1 e 24'
+        'mensagem' => 'ID do cliente é obrigatório',
+        'campos_recebidos' => array_keys($dados),
+        'dados_debug' => $dados
     ]);
     exit;
 }
 
-// Validar itens
-if (!isset($dados['itens']) || !is_array($dados['itens']) || empty($dados['itens'])) {
+// ✅ CONVERTER ID_CLIENTE PARA INT
+$idCliente = intval($dados['id_cliente']);
+if ($idCliente <= 0) {
+    error_log('ERRO: id_cliente inválido: ' . $dados['id_cliente']);
     http_response_code(400);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => 'Adicione pelo menos um item ? venda'
+        'mensagem' => 'ID do cliente deve ser um número maior que 0',
+        'id_cliente_recebido' => $dados['id_cliente'],
+        'id_cliente_convertido' => $idCliente
     ]);
     exit;
 }
 
-// Validar cada item
-foreach ($dados['itens'] as $index => $item) {
-    if (!isset($item['codigo']) || !isset($item['descricao']) || !isset($item['valor_unitario'])) {
-        http_response_code(400);
-        echo json_encode([
-            'sucesso' => false,
-            'mensagem' => "Item {$index}: campos c?digo, descrição e valor_unit?rio s?o obrigat?rios"
-        ]);
-        exit;
-    }
-    
-    $quantidade = isset($item['quantidade']) ? filter_var($item['quantidade'], FILTER_VALIDATE_INT) : 1;
-    $valorUnitario = filter_var($item['valor_unitario'], FILTER_VALIDATE_FLOAT);
-    
-    if ($quantidade === false || $quantidade < 1 || $quantidade > 9999) {
-        http_response_code(400);
-        echo json_encode([
-            'sucesso' => false,
-            'mensagem' => "Item {$index}: quantidade deve ser entre 1 e 9999"
-        ]);
-        exit;
-    }
-    
-    if ($valorUnitario === false || $valorUnitario <= 0 || $valorUnitario > 999999.99) {
-        http_response_code(400);
-        echo json_encode([
-            'sucesso' => false,
-            'mensagem' => "Item {$index}: valor unit?rio deve ser maior que zero e menor que R$ 999.999,99"
-        ]);
-        exit;
-    }
-    
-    if (strlen(trim($item['codigo'])) < 2) {
-        http_response_code(400);
-        echo json_encode([
-            'sucesso' => false,
-            'mensagem' => "Item {$index}: c?digo deve ter pelo menos 2 caracteres"
-        ]);
-        exit;
-    }
-    
-    if (strlen(trim($item['descricao'])) < 3 || strlen(trim($item['descricao'])) > 255) {
-        http_response_code(400);
-        echo json_encode([
-            'sucesso' => false,
-            'mensagem' => "Item {$index}: descrição deve ter entre 3 e 255 caracteres"
-        ]);
-        exit;
-    }
+// ✅ OBTER ID_USUARIO DA SESSÃO
+if (!isset($_SESSION['id_usuario'])) {
+    error_log('ERRO: Sessão não contém id_usuario');
+    http_response_code(401);
+    echo json_encode([
+        'sucesso' => false,
+        'mensagem' => 'Sessão expirada. Faça login novamente.',
+        'sessao_debug' => [
+            'existe_id_usuario' => isset($_SESSION['id_usuario']),
+            'chaves_sessao' => array_keys($_SESSION)
+        ]
+    ]);
+    exit;
 }
 
-$venda = new Venda();
-$financeiro = new Financeiro();
+$idUsuario = intval($_SESSION['id_usuario']);
+error_log('Usuario autenticado: ' . $idUsuario);
 
+// ✅ EXTRAIR OUTROS PARÂMETROS
+$observacoes = $dados['observacoes'] ?? '';
+$quantidadeParcelas = intval($dados['quantidade_parcelas'] ?? 1);
+$itens = $dados['itens'] ?? [];
+
+error_log("Parâmetros da venda:");
+error_log("  - idCliente: $idCliente");
+error_log("  - idUsuario: $idUsuario");
+error_log("  - observacoes: " . strlen($observacoes) . " chars");
+error_log("  - quantidadeParcelas: $quantidadeParcelas");
+error_log("  - itens: " . count($itens) . " itens");
+
+// ✅ CRIAR VENDA
 try {
-    // Usar transação através da classe Database
-    $database = new Database();
-    $connection = $database->getConnection();
-    $connection->begin_transaction();
+    $venda_obj = new Venda();
     
-    // Criar venda
-    $idVenda = $venda->criar(
+    error_log('Chamando $venda_obj->criar()...');
+    
+    $idVenda = $venda_obj->criar(
         $idCliente,
-        $_SESSION['id_usuario'] ?? 1,
+        $idUsuario,
         $observacoes,
         $quantidadeParcelas
     );
+    
+    error_log('Venda criada com sucesso. ID: ' . $idVenda);
 
-    // Adicionar itens
-    foreach ($dados['itens'] as $item) {
-        $venda->adicionarItem(
-            $idVenda,
-            htmlspecialchars(trim($item['codigo']), ENT_QUOTES, 'UTF-8'),
-            htmlspecialchars(trim($item['descricao']), ENT_QUOTES, 'UTF-8'),
-            $item['quantidade'] ?? 1,
-            $item['valor_unitario']
-        );
+    // ✅ ADICIONAR ITENS (SE HOUVER)
+    if (is_array($itens) && count($itens) > 0) {
+        error_log('Adicionando ' . count($itens) . ' itens à venda...');
+        
+        foreach ($itens as $index => $item) {
+            try {
+                error_log("Adicionando item $index: " . json_encode($item));
+                
+                $venda_obj->adicionarItem(
+                    $idVenda,
+                    $item['codigo_produto'] ?? 'INDEFINIDO',
+                    $item['descricao'] ?? 'Descrição não informada',
+                    intval($item['quantidade'] ?? 1),
+                    floatval($item['valor_unitario'] ?? 0)
+                );
+                
+                error_log("Item $index adicionado com sucesso");
+            } catch (Exception $eItem) {
+                error_log('AVISO: Erro ao adicionar item ' . $index . ': ' . $eItem->getMessage());
+                // Continuar com próximos itens
+            }
+        }
+    } else {
+        error_log('Nenhum item para adicionar');
     }
 
-    // Gerar parcelas
-    $financeiro->gerarParcelas($idVenda, $quantidadeParcelas);
-
-    $connection->commit();
+    // ✅ RESPOSTA DE SUCESSO
+    error_log('=== FIM: CRIAR VENDA (SUCESSO) ===');
     
+    http_response_code(201);
     echo json_encode([
         'sucesso' => true,
         'mensagem' => 'Venda criada com sucesso',
-        'id_venda' => $idVenda
+        'id_venda' => $idVenda,
+        'debug' => [
+            'id_cliente' => $idCliente,
+            'id_usuario' => $idUsuario,
+            'quantidade_itens' => count($itens),
+            'timestamp' => date('Y-m-d H:i:s')
+        ]
     ]);
-    
+
 } catch (Exception $e) {
-    $connection->rollback();
+    error_log('=== FIM: CRIAR VENDA (ERRO) ===');
+    error_log('ERRO GERAL: ' . $e->getMessage());
+    error_log('File: ' . $e->getFile() . ':' . $e->getLine());
+    error_log('Trace: ' . $e->getTraceAsString());
     
-    // Log do erro para debugging
-    error_log("Erro ao criar venda: " . $e->getMessage());
-    
-    // Determinar c?digo de status baseado no tipo de erro
-    $mensagem = $e->getMessage();
-    $statusCode = 400;
-    
-    if (strpos($mensagem, 'n?o encontrad') !== false) {
-        $statusCode = 404;
-    } elseif (strpos($mensagem, 'j? exist') !== false) {
-        $statusCode = 409; // Conflict
-    } elseif (strpos($mensagem, 'inv?lido') !== false) {
-        $statusCode = 422; // Unprocessable Entity
-    }
-    
-    http_response_code($statusCode);
+    http_response_code(400);
     echo json_encode([
         'sucesso' => false,
-        'mensagem' => $mensagem
+        'mensagem' => $e->getMessage(),
+        'debug' => [
+            'arquivo' => $e->getFile(),
+            'linha' => $e->getLine(),
+            'id_cliente' => $idCliente ?? 'INDEFINIDO',
+            'id_usuario' => $idUsuario ?? 'INDEFINIDO'
+        ]
     ]);
 }
 ?>

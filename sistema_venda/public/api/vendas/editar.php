@@ -3,7 +3,7 @@ header('Content-Type: application/json; charset=utf-8');
 require_once '../../../config/config.php';
 require_once '../../../config/auth.php';
 require_once '../../../classes/Database.php';
-require_once '../../../classes/Cliente.php';
+require_once '../../../classes/Venda.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -14,23 +14,27 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $input = file_get_contents('php://input');
 $dados = json_decode($input, true);
 
-if (!isset($dados['id_cliente'])) {
+if (!$dados || !isset($dados['id_venda'])) {
     http_response_code(400);
-    echo json_encode(['sucesso' => false, 'mensagem' => 'ID do cliente eh obrigatorio']);
+    echo json_encode(['sucesso' => false, 'mensagem' => 'ID da venda eh obrigatorio']);
     exit;
 }
 
-$cliente = new Cliente();
+$venda = new Venda();
 
 try {
-    $cliente->deletar($dados['id_cliente']);
-    
+    $venda->atualizar(
+        $dados['id_venda'],
+        $dados['observacoes'] ?? '',
+        $dados['status'] ?? null
+    );
+
     echo json_encode([
         'sucesso' => true,
-        'mensagem' => 'Cliente deletado com sucesso'
+        'mensagem' => 'Venda atualizada com sucesso'
     ]);
 } catch (Exception $e) {
-    error_log('Erro ao deletar cliente: ' . $e->getMessage());
+    error_log('Erro ao atualizar venda: ' . $e->getMessage());
     http_response_code(400);
     echo json_encode([
         'sucesso' => false,

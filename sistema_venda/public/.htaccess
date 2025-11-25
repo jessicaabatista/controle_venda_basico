@@ -1,0 +1,68 @@
+# Configuração específica para pasta public
+
+# Habilitar rewrite engine
+RewriteEngine On
+
+# Configurações de segurança
+Options -Indexes
+ServerSignature Off
+
+# Permitir acesso direto aos assets (CSS, JS, imagens)
+RewriteCond %{REQUEST_URI} \.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ [NC]
+RewriteRule ^ - [L]
+
+# Permitir acesso direto à pasta assets
+RewriteCond %{REQUEST_URI} ^/sistema_venda/public/assets/ [NC]
+RewriteRule ^ - [L]
+
+# Permitir acesso direto à pasta uploads
+RewriteCond %{REQUEST_URI} ^/sistema_venda/public/uploads/ [NC]
+RewriteRule ^ - [L]
+
+# Configurações de CORS para assets
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+        Header set Access-Control-Allow-Origin "*"
+        Header set Cache-Control "public, max-age=31536000"
+    </FilesMatch>
+</IfModule>
+
+# Forçar encoding correto para CSS e JS
+<IfModule mod_mime.c>
+    AddType text/css .css
+    AddType application/javascript .js
+    AddType image/svg+xml .svg
+</IfModule>
+
+# Compressão gzip para assets
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# Configurações de PHP para desenvolvimento
+<IfModule mod_php.c>
+    php_flag display_errors On
+    php_value error_reporting E_ALL
+</IfModule>
+
+<IfModule mod_php7.c>
+    php_flag display_errors On
+    php_value error_reporting E_ALL
+</IfModule>
+
+<IfModule mod_php8.c>
+    php_flag display_errors On
+    php_value error_reporting E_ALL
+</IfModule>
+
+# Evitar exposição de arquivos sensíveis
+<Files ".ht*">
+    Require all denied
+</Files>
+
+<FilesMatch "\.(log|sql|bak|backup|old)$">
+    Require all denied
+</FilesMatch>
